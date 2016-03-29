@@ -5,15 +5,15 @@ package com.teamlimo.project_y.core;
  */
 public final class DatabaseManager {
 
-    private static IDatabaseRequester impl;
+    private static IDatabaseManager impl;
 
     private DatabaseManager() {
         
     }
 
-    public static IDatabaseRequester getInstance() {
+    public static IDatabaseManager getInstance() {
         if (impl == null)
-            impl = new HttpRequester();
+            impl = new HttpDatabaseManager();
 
         return impl;
     }

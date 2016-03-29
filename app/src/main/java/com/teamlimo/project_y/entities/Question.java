@@ -9,4 +9,5 @@ public class Question {
 
     private String text;
     private ArrayList<Answer> answers;
+    private String category;
 }

@@ -3,11 +3,21 @@ package com.teamlimo.project_y.core;
 /**
  * Created by Project0rion on 27.03.2016.
  */
-public class HttpRequester implements IDatabaseRequester {
+public class HttpDatabaseManager implements IDatabaseManager {
 
     @Override
-    public void connect() {
+    public int[] queryIds(String tableName) {
+        return new int[0];
+    }
 
+    @Override
+    public int queryRandomId(String tableName) {
+        return 0;
+    }
+
+    @Override
+    public <T> T query(int id, String tableName) {
+        return null;
     }
 
     /*

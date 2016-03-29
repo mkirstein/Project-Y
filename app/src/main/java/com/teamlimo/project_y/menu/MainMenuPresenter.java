@@ -8,18 +8,18 @@ import com.teamlimo.project_y.core.ViewManager;
  */
 public class MainMenuPresenter {
 
-    private IMainMenuView mainMenuView;
+    private Object mainMenuView;
 
-    public MainMenuPresenter(IMainMenuView mainMenuView) {
+    public MainMenuPresenter(Object mainMenuView) {
         this.mainMenuView = mainMenuView;
         ViewManager.init(new AndroidViewManager());
     }
 
     public void startQuiz() {
-        ViewManager.getInstance().switchView(mainMenuView, mainMenuView.createQuizView());
+        ViewManager.getInstance().switchView(mainMenuView, ViewManager.getInstance().getViewFactory().createQuizView());
     }
 
     public void viewHighscore() {
-        ViewManager.getInstance().switchView(mainMenuView, mainMenuView.createHighscoreView());
+        ViewManager.getInstance().switchView(mainMenuView, ViewManager.getInstance().getViewFactory().createHighscoreView());
     }
 }

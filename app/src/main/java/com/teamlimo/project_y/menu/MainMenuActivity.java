@@ -8,7 +8,7 @@ import com.teamlimo.project_y.R;
 import com.teamlimo.project_y.highscore.HighscoreActivity;
 import com.teamlimo.project_y.quiz.QuizActivity;
 
-public class MainMenuActivity extends AppCompatActivity implements IMainMenuView {
+public class MainMenuActivity extends AppCompatActivity {
 
     private MainMenuPresenter presenter;
 
@@ -32,15 +32,5 @@ public class MainMenuActivity extends AppCompatActivity implements IMainMenuView
                 presenter.viewHighscore();
                 break;
         }
-    }
-
-    @Override
-    public Object createQuizView() {
-        return new QuizActivity();
-    }
-
-    @Override
-    public Object createHighscoreView() {
-        return new HighscoreActivity();
     }
 }

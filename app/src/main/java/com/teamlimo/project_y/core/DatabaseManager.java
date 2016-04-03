@@ -13,7 +13,7 @@ public final class DatabaseManager {
 
     public static IDatabaseManager getInstance() {
         if (impl == null)
-            impl = new HttpDatabaseManager("http://192.168.178.37/");
+            impl = new HttpDatabaseManager("http://lamp.wlan.hwr-berlin.de/CS/csdb2/");
 
         return impl;
     }

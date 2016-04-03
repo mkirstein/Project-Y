@@ -26,4 +26,16 @@ public class Answer implements IEntity {
             e.printStackTrace();
         }
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public boolean isCorrect() {
+        return isCorrect;
+    }
 }

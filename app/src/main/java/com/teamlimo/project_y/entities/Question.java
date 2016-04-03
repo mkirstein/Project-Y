@@ -40,4 +40,8 @@ public class Question implements IEntity {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<Answer> getAnswers() {
+        return answers;
+    }
 }

@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.teamlimo.project_y.R;
 import com.teamlimo.project_y.entities.Answer;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QuizActivity extends Activity {
+public class QuizActivity extends Activity implements IQuizView {
 
     private QuizPresenter presenter;
 
@@ -24,7 +25,7 @@ public class QuizActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-        presenter = new QuizPresenter();
+        presenter = new QuizPresenter(this);
 
         presenter.buildNewQuiz();
     }
@@ -35,6 +36,13 @@ public class QuizActivity extends Activity {
 
         runOnUiThread(new Runnable() {
             public void run() {
+
+
+                TextView categoryView = (TextView) findViewById(R.id.category_name);
+                TextView questionView = (TextView) findViewById(R.id.question_name);
+
+                categoryView.setText(question.getCategory());
+                questionView.setText(question.getQuestionText());
 
                 ArrayList<Answer> answers = question.getAnswers();
                 ArrayList<Map<String, String>> transformedAnswers = new ArrayList<Map<String, String>>();
@@ -47,15 +55,14 @@ public class QuizActivity extends Activity {
                     transformedAnswers.add(answersMap);
                 }
 
-                //ToDo eigenen Adapter schreiben, der die Buttons mit Daten befüllt
-//                ListAdapter adapter = new SimpleAdapter(
-//                        QuizActivity.this,
-//                        transformedAnswers,
-//                        R.layout.answerlist_item,
-//                        new String[] { "text"},
-//                        new int[] { R.id.anwser_button });
-//
-//                listView.setAdapter(adapter);
+                ListAdapter adapter = new SimpleAdapter(
+                        QuizActivity.this,
+                        transformedAnswers,
+                        R.layout.answerlist_item,
+                        new String[] { "text"},
+                        new int[] { R.id.answerText });
+
+                listView.setAdapter(adapter);
             }
         });
     }

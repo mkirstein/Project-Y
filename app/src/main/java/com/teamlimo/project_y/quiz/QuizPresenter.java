@@ -9,12 +9,18 @@ import java.util.ArrayList;
  */
 public class QuizPresenter implements IQuizReceiver {
 
+    private IQuizView view;
+
+    public QuizPresenter(IQuizView view) {
+        this.view = view;
+    }
+
     public void buildNewQuiz() {
         new BuildQuizCommand(this).execute();
     }
 
     @Override
     public void receiveQuiz(ArrayList<Question> questions) {
-        // ToDo: tell View to display first question
+        view.displayQuestion(questions.get(0));
     }
 }

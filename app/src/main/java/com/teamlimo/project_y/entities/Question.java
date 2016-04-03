@@ -44,4 +44,12 @@ public class Question implements IEntity {
     public ArrayList<Answer> getAnswers() {
         return answers;
     }
+
+    public String getQuestionText() {
+        return text;
+    }
+
+    public String getCategory() {
+        return category;
+    }
 }

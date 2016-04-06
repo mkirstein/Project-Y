@@ -9,7 +9,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +23,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Project0rion on 27.03.2016.
@@ -29,7 +33,6 @@ import java.util.List;
 public class HttpDatabaseManager implements IDatabaseManager {
 
     private String baseAddress;
-    private boolean lastOperationSucceeded;
 
     private static final String TAG_ITEMS = "items";
 
@@ -39,33 +42,15 @@ public class HttpDatabaseManager implements IDatabaseManager {
 
     public <T extends IEntity> ArrayList<T> queryMany(Class<T> entityType, String operationName) {
 
-        InputStream inputStream = null;
+        String url = buildOperationUrl(operationName);
+        HttpGet httpGet = new HttpGet(url);
+        JSONObject requestResult = executeHttpRequest(httpGet);
 
-        try {
-            // request method is GET
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            String url = buildOperationUrl(operationName);
-            HttpGet httpGet = new HttpGet(url);
-
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            inputStream = httpEntity.getContent();
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject jsonResult = getJSONfromStream(inputStream);
         ArrayList<T> result = new ArrayList<T>();
 
         try {
-            JSONArray jsonItems = jsonResult.getJSONArray(TAG_ITEMS);
+            JSONArray jsonItems = requestResult.getJSONArray(TAG_ITEMS);
 
-            // looping through all items
             for (int i = 0; i < jsonItems.length(); i++) {
                 JSONObject jsonItem = jsonItems.getJSONObject(i);
 
@@ -84,21 +69,33 @@ public class HttpDatabaseManager implements IDatabaseManager {
         return result;
     }
 
-    public Object insertOrUpdate(String operationName, List<NameValuePair> params) {
+    public void insertOrUpdate(String operationName, IEntity entity) {
 
-        InputStream inputStream = null;
+        List<NameValuePair> entityPropertyValues = getEntityPropertyValues(entity);
+
+        JSONObject requestResult = null;
+
+        String url = buildOperationUrl(operationName);
+        HttpPost httpPost = new HttpPost(url);
 
         try {
-            // request method is POST
-            // defaultHttpClient
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            String url = buildOperationUrl(operationName);
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.setEntity(new UrlEncodedFormEntity(params));
+            httpPost.setEntity(new UrlEncodedFormEntity(entityPropertyValues));
+            requestResult = executeHttpRequest(httpPost);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+    private JSONObject executeHttpRequest(HttpUriRequest httpRequest) {
+
+        InputStream requestResult = null;
+
+        try {
+            // request method is GET
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpResponse httpResponse = httpClient.execute(httpRequest);
             HttpEntity httpEntity = httpResponse.getEntity();
-            inputStream = httpEntity.getContent();
+            requestResult = httpEntity.getContent();
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -108,9 +105,7 @@ public class HttpDatabaseManager implements IDatabaseManager {
             e.printStackTrace();
         }
 
-        JSONObject result = getJSONfromStream(inputStream);
-
-        return result;
+        return getJSONfromStream(requestResult);
     }
 
     private String buildOperationUrl(String operationName) {
@@ -145,5 +140,18 @@ public class HttpDatabaseManager implements IDatabaseManager {
 
         // return JSON String
         return jObj;
+    }
+
+    private List<NameValuePair> getEntityPropertyValues(IEntity entity) {
+        Map<String, String> convertedEntity = entity.saveToMap();
+        Iterator iterator = convertedEntity.entrySet().iterator();
+
+        List<NameValuePair> entityPropertyValues = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> propertyValue = (Map.Entry<String, String>) iterator.next();
+            entityPropertyValues.add(new BasicNameValuePair(propertyValue.getKey(), propertyValue.getValue()));
+        }
+
+        return entityPropertyValues;
     }
 }

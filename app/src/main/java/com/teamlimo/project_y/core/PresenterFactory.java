@@ -5,7 +5,7 @@ import java.util.Hashtable;
 /**
  * Created by Marc on 06.04.2016.
  */
-public class PresenterFactory implements IPresenterFactory {
+public class PresenterFactory {
 
     private static PresenterFactory instance;
     private Hashtable<Class, Object> presenterTable;
@@ -14,14 +14,13 @@ public class PresenterFactory implements IPresenterFactory {
         presenterTable = new Hashtable<>();
     }
 
-    public static IPresenterFactory getInstance() {
+    public static PresenterFactory getInstance() {
         if(instance == null) {
             instance = new PresenterFactory();
         }
         return instance;
     }
 
-    @Override
     public <T> T getPresenter(Class<T> presenterType) {
         if(!presenterTable.containsKey(presenterType)) {
             try {

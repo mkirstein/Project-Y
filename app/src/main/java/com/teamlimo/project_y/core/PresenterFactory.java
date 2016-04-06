@@ -10,7 +10,9 @@ public class PresenterFactory implements IPresenterFactory {
     private static PresenterFactory instance;
     private Hashtable<Class, Object> presenterTable;
 
-    private PresenterFactory() {}
+    private PresenterFactory() {
+        presenterTable = new Hashtable<>();
+    }
 
     public static IPresenterFactory getInstance() {
         if(instance == null) {

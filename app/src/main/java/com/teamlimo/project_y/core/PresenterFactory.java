@@ -23,7 +23,7 @@ public class PresenterFactory implements IPresenterFactory {
 
     @Override
     public <T> T getPresenter(Class<T> presenterType) {
-        if(!presenterTable.contains(presenterType)) {
+        if(!presenterTable.containsKey(presenterType)) {
             try {
                 presenterTable.put(presenterType, presenterType.newInstance());
             } catch (InstantiationException e) {

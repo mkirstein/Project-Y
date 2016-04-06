@@ -33,6 +33,11 @@ public class QuizActivity extends Activity implements IQuizView {
         presenter = PresenterFactory.getInstance().getPresenter(QuizPresenter.class);
         presenter.setView(this);
         //presenter.initQuiz();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         presenter.buildNewQuiz();
     }
 

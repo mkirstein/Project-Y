@@ -10,6 +10,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.teamlimo.project_y.R;
+import com.teamlimo.project_y.core.PresenterFactory;
 import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
 
@@ -25,8 +26,9 @@ public class QuizActivity extends Activity implements IQuizView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-        presenter = new QuizPresenter(this);
-
+        presenter = PresenterFactory.getInstance().getPresenter(QuizPresenter.class);
+        presenter.setView(this);
+        //presenter.initQuiz();
         presenter.buildNewQuiz();
     }
 

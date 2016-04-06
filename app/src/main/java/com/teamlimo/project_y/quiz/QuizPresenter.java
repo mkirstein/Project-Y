@@ -11,8 +11,12 @@ public class QuizPresenter implements IQuizReceiver {
 
     private IQuizView view;
 
-    public QuizPresenter(IQuizView view) {
+    public void setView(IQuizView view) {
         this.view = view;
+    }
+
+    public void initQuiz() {
+
     }
 
     public void buildNewQuiz() {

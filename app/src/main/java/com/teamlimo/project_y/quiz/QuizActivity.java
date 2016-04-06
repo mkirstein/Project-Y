@@ -1,7 +1,9 @@
 package com.teamlimo.project_y.quiz;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -10,7 +12,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.teamlimo.project_y.R;
+import com.teamlimo.project_y.core.IViewManager;
 import com.teamlimo.project_y.core.PresenterFactory;
+import com.teamlimo.project_y.core.ViewManager;
 import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
 
@@ -68,4 +72,23 @@ public class QuizActivity extends Activity implements IQuizView {
             }
         });
     }
+
+
+    public void displayError(String title, String message) {
+        final Activity sourceView = this;
+        AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(this);
+        errorDialogBuilder.setCancelable(false);
+        errorDialogBuilder.setTitle(title);
+        errorDialogBuilder.setMessage(message);
+        errorDialogBuilder.setNeutralButton("Zurück zum Hauptmenü", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                IViewManager vM = ViewManager.getInstance();
+                vM.switchView(sourceView, vM.getViewFactory().createMenuView());
+            }
+        });
+        errorDialogBuilder.create().show();
+    }
+
+
 }

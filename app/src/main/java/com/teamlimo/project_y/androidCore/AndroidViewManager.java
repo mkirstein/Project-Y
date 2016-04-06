@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.teamlimo.project_y.core.IViewFactory;
 import com.teamlimo.project_y.core.IViewManager;
 import com.teamlimo.project_y.highscore.HighscoreActivity;
+import com.teamlimo.project_y.menu.MainMenuActivity;
 import com.teamlimo.project_y.quiz.QuizActivity;
 
 /**
@@ -27,6 +28,12 @@ public class AndroidViewManager implements IViewManager, IViewFactory {
 
         Intent myIntent = new Intent(sourceActivity, targetView.getClass());
         sourceActivity.startActivity(myIntent);
+    }
+
+
+    @Override
+    public Object createMenuView() {
+        return new MainMenuActivity();
     }
 
     @Override

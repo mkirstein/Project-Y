@@ -5,6 +5,7 @@ package com.teamlimo.project_y.core;
  */
 public interface IViewFactory {
 
+    Object createMenuView();
     Object createQuizView();
     Object createHighscoreView();
 }

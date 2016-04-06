@@ -46,6 +46,11 @@ public class HttpDatabaseManager implements IDatabaseManager {
         HttpGet httpGet = new HttpGet(url);
         JSONObject requestResult = executeHttpRequest(httpGet);
 
+        // Return null if server connection failed
+        if(requestResult == null) {
+            return null;
+        }
+
         ArrayList<T> result = new ArrayList<T>();
 
         try {

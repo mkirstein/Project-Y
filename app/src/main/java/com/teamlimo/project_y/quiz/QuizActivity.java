@@ -2,12 +2,11 @@ package com.teamlimo.project_y.quiz;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,7 +21,6 @@ import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class QuizActivity extends Activity implements IQuizView {
@@ -46,16 +44,16 @@ public class QuizActivity extends Activity implements IQuizView {
         setNextQuestionButtonVisibility(true);
     }
 
-    public void nextQuestion(View v) {
+    public void onNextQuestionButtonClicked(View v) {
         setNextQuestionButtonVisibility(false);
         presenter.showNextQuestion();
     }
 
-    public void showResultsButton() {
+    public void showGoToQuizResultButton() {
         setResultButtonVisibility(true);
     }
 
-    public void gotoResults(View v) {
+    public void onGoToQuizResultButtonClicked(View v) {
         IViewManager vM = ViewManager.getInstance();
         vM.switchView(this, vM.getViewFactory().createQuizResultView());
         setResultButtonVisibility(false);
@@ -108,39 +106,50 @@ public class QuizActivity extends Activity implements IQuizView {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if(!presenter.canSelectAnswer()) {
+                        if (!presenter.canSelectAnswer()) {
                             return;
                         }
 
                         TextView answerIDView = (TextView) view.findViewById(R.id.answerID);
-                        long answerId = Long.parseLong((String)answerIDView.getText());
+                        long answerId = Long.parseLong((String) answerIDView.getText());
                         boolean isCorrectAnswer = presenter.processSelectedAnswer(answerId);
-                        if(isCorrectAnswer) {
-                            view.setBackgroundColor(0xFF00FF00);
+
+                        if (isCorrectAnswer) {
+                            view.setBackgroundResource(R.color.colorCorrect);
                         } else {
-                            view.setBackgroundColor(0xFFFF0000);
+                            view.setBackgroundResource(R.color.colorIncorrect);
                         }
+
+                        TextView answerTextView = (TextView) view.findViewById(R.id.answerText);
+                        answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
                     }
                 });
             }
         });
     }
 
+    public void displayConnectionFailedError() {
+        displayError(getString(R.string.connection_failed_dialog_title), getString(R.string.connection_failed_dialog_message));
+    }
 
-    public void displayError(String title, String message) {
+    public void displayNoDataFoundError() {
+        displayError(getString(R.string.no_data_found_dialog_title), getString(R.string.no_data_found_dialog_message));
+    }
+
+    private void displayError(String title, String message) {
         final Activity sourceView = this;
         AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(this);
         errorDialogBuilder.setCancelable(false);
         errorDialogBuilder.setTitle(title);
         errorDialogBuilder.setMessage(message);
-        errorDialogBuilder.setPositiveButton("Erneut versuchen", new DialogInterface.OnClickListener() {
+        errorDialogBuilder.setPositiveButton(getString(R.string.retry_dialog_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 IViewManager vM = ViewManager.getInstance();
                 vM.switchView(sourceView, vM.getViewFactory().createQuizView());
             }
         });
-        errorDialogBuilder.setNeutralButton("Zurück", new DialogInterface.OnClickListener() {
+        errorDialogBuilder.setNeutralButton(getString(R.string.return_dialog_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 IViewManager vM = ViewManager.getInstance();

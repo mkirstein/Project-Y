@@ -23,7 +23,7 @@ public class QuizPresenter implements IQuizReceiver {
     private void showQuiz() {
 
         if(questions == null || questions.isEmpty()) {
-            buildNewQuiz();
+            new BuildQuizCommand(this).execute();
             currentQuestionIndex = 0;
         }
 
@@ -35,16 +35,13 @@ public class QuizPresenter implements IQuizReceiver {
 
     public void showNextQuestion() {
         currentQuestionIndex++;
+
         if(currentQuestionIndex >= questions.size()) {
-            view.showResultsButton();
+            view.showGoToQuizResultButton();
         } else {
             view.displayQuestion(questions.get(currentQuestionIndex));
             answerSelected = false;
         }
-    }
-
-    private void buildNewQuiz() {
-        new BuildQuizCommand(this).execute();
     }
 
     public boolean canSelectAnswer() {
@@ -66,7 +63,7 @@ public class QuizPresenter implements IQuizReceiver {
             }
         }
         if(currentQuestionIndex + 1 >= questions.size()) {
-            view.showResultsButton();
+            view.showGoToQuizResultButton();
         } else {
             view.showNextQuestionButton();
         }
@@ -77,10 +74,10 @@ public class QuizPresenter implements IQuizReceiver {
     public void receiveQuiz(ArrayList<Question> questions) {
         // Connection error handling
         if(questions == null) {
-            view.displayError("Keine Verbindung möglich", "Es konnte keine Verbindung mit dem Server aufgebaut werden!");
+            view.displayConnectionFailedError();
         } // Database error, no results
         else if(questions.isEmpty()) {
-            view.displayError("Keine Daten vorhanden", "Es konnte keine Daten geladen werden!");
+            view.displayNoDataFoundError();
         } else {
             this.questions = questions;
             showQuiz();
@@ -90,5 +87,6 @@ public class QuizPresenter implements IQuizReceiver {
     public void reset() {
         answerSelected = false;
         questions = null;
+        currentQuestionIndex = 0;
     }
 }

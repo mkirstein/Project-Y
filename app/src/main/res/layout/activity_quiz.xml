@@ -35,7 +35,7 @@
             android:layout_gravity="center_horizontal"
             android:padding="10dp"
             android:text="Nächste Frage"
-            android:onClick="nextQuestion"/>
+            android:onClick="onNextQuestionButtonClicked"/>
 
         <Button
             android:id="@+id/gotoResultsButton"
@@ -45,5 +45,5 @@
             android:layout_gravity="center_horizontal"
             android:padding="10dp"
             android:text="Zur Auswertung"
-            android:onClick="gotoResults"/>
+            android:onClick="onGoToQuizResultButtonClicked"/>
 </LinearLayout>

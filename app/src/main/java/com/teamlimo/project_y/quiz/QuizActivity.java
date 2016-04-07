@@ -51,10 +51,27 @@ public class QuizActivity extends Activity implements IQuizView {
         presenter.showNextQuestion();
     }
 
+    public void showResultsButton() {
+        setResultButtonVisibility(true);
+    }
+
+    public void gotoResults(View v) {
+        IViewManager vM = ViewManager.getInstance();
+        vM.switchView(this, vM.getViewFactory().createQuizResultView());
+        setResultButtonVisibility(false);
+        presenter.reset();
+    }
+
     private void setNextQuestionButtonVisibility(boolean visible) {
         Button nextQuestionButton = (Button) findViewById(R.id.nextQuestionButton);
         int visibility = (visible) ? View.VISIBLE : View.GONE;
         nextQuestionButton.setVisibility(visibility);
+    }
+
+    private void setResultButtonVisibility(boolean visible) {
+        Button resultButton = (Button) findViewById(R.id.gotoResultsButton);
+        int visibility = (visible) ? View.VISIBLE : View.GONE;
+        resultButton.setVisibility(visibility);
     }
 
     public void displayQuestion(final Question question) {
@@ -76,10 +93,7 @@ public class QuizActivity extends Activity implements IQuizView {
                 ArrayList<Map<String, String>> transformedAnswers = new ArrayList<Map<String, String>>();
 
                 for (Answer answer : answers) {
-                    Map<String, String> answersMap = new HashMap<String, String>();
-                    answersMap.put("id", String.valueOf(answer.getId()));
-                    answersMap.put("text", answer.getText());
-                    answersMap.put("isCorrect", String.valueOf(answer.isCorrect()));
+                    Map<String, String> answersMap = answer.saveToMap();
                     transformedAnswers.add(answersMap);
                 }
 

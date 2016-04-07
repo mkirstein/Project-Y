@@ -38,7 +38,7 @@ public class QuizPresenter implements IQuizReceiver {
     public void showNextQuestion() {
         currentQuestionIndex++;
         if(currentQuestionIndex >= questions.size()) {
-            //quizFinished = true; in neuer Methode setzen, wenn Activity verlassen wird
+            view.showResultsButton();
         } else {
             view.displayQuestion(questions.get(currentQuestionIndex));
             answerSelected = false;
@@ -63,13 +63,15 @@ public class QuizPresenter implements IQuizReceiver {
             if(answer.getId() == answerId) {
                 if(answer.isCorrect()) {
                     isCorrect = true;
-                } else {
-
                 }
                 break;
             }
         }
-        view.showNextQuestionButton();
+        if(currentQuestionIndex + 1 >= questions.size()) {
+            view.showResultsButton();
+        } else {
+            view.showNextQuestionButton();
+        }
         return isCorrect;
     }
 
@@ -85,5 +87,10 @@ public class QuizPresenter implements IQuizReceiver {
             this.questions = questions;
             showQuiz();
         }
+    }
+
+    public void reset() {
+        answerSelected = false;
+        quizFinished = true;
     }
 }

@@ -9,4 +9,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.teamlimo.project_y.highscore.HighscoreActivity">
 
+    <ListView
+        android:id="@+id/highscoreList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

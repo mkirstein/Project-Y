@@ -9,23 +9,22 @@
             android:id="@+id/category_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:textSize="30sp"
-            android:padding="10dp"
-            android:text="Kategorie"/>
+            android:padding="10dp"/>
         <TextView
             android:id="@+id/question_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:textSize="20sp"
-            android:padding="10dp"
-            android:text="Frage"/>
+            android:padding="10dp"/>
 
         <ListView
             android:id="@+id/answerList"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:padding="10dp"/>
 
         <Button
@@ -37,6 +36,7 @@
             android:padding="10dp"
             android:text="Nächste Frage"
             android:onClick="nextQuestion"/>
+
         <Button
             android:id="@+id/gotoResultsButton"
             android:visibility="gone"

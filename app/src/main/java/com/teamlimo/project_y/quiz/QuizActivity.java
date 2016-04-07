@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -31,19 +34,33 @@ public class QuizActivity extends Activity implements IQuizView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
         presenter = PresenterFactory.getInstance().getPresenter(QuizPresenter.class);
-        presenter.setView(this);
-        //presenter.initQuiz();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        presenter.buildNewQuiz();
+        presenter.setView(this);
+    }
+
+    public void showNextQuestionButton() {
+        setNextQuestionButtonVisibility(true);
+    }
+
+    public void nextQuestion(View v) {
+        setNextQuestionButtonVisibility(false);
+        presenter.showNextQuestion();
+    }
+
+    private void setNextQuestionButtonVisibility(boolean visible) {
+        Button nextQuestionButton = (Button) findViewById(R.id.nextQuestionButton);
+        int visibility = (visible) ? View.VISIBLE : View.GONE;
+        nextQuestionButton.setVisibility(visibility);
     }
 
     public void displayQuestion(final Question question) {
 
         final ListView listView = (ListView) findViewById(R.id.answerList);
+
 
         runOnUiThread(new Runnable() {
             public void run() {
@@ -70,10 +87,27 @@ public class QuizActivity extends Activity implements IQuizView {
                         QuizActivity.this,
                         transformedAnswers,
                         R.layout.answerlist_item,
-                        new String[] { "text"},
-                        new int[] { R.id.answerText });
+                        new String[]{"text", "id"},
+                        new int[]{R.id.answerText, R.id.answerID});
 
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(!presenter.canSelectAnswer()) {
+                            return;
+                        }
+
+                        TextView answerIDView = (TextView) view.findViewById(R.id.answerID);
+                        long answerId = Long.parseLong((String)answerIDView.getText());
+                        boolean isCorrectAnswer = presenter.processSelectedAnswer(answerId);
+                        if(isCorrectAnswer) {
+                            view.setBackgroundColor(0xFF00FF00);
+                        } else {
+                            view.setBackgroundColor(0xFFFF0000);
+                        }
+                    }
+                });
             }
         });
     }
@@ -85,7 +119,14 @@ public class QuizActivity extends Activity implements IQuizView {
         errorDialogBuilder.setCancelable(false);
         errorDialogBuilder.setTitle(title);
         errorDialogBuilder.setMessage(message);
-        errorDialogBuilder.setNeutralButton("Zurück zum Hauptmenü", new DialogInterface.OnClickListener() {
+        errorDialogBuilder.setPositiveButton("Erneut versuchen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                IViewManager vM = ViewManager.getInstance();
+                vM.switchView(sourceView, vM.getViewFactory().createQuizView());
+            }
+        });
+        errorDialogBuilder.setNeutralButton("Zurück", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 IViewManager vM = ViewManager.getInstance();

@@ -1,8 +1,6 @@
 package com.teamlimo.project_y.quiz;
 
-import android.app.AlertDialog;
-
-import com.teamlimo.project_y.core.ViewManager;
+import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
 
 import java.util.ArrayList;
@@ -13,17 +11,66 @@ import java.util.ArrayList;
 public class QuizPresenter implements IQuizReceiver {
 
     private IQuizView view;
+    private ArrayList<Question> questions;
+    private int currentQuestionIndex;
+    private boolean answerSelected;
+    private boolean quizFinished = false;
 
     public void setView(IQuizView view) {
         this.view = view;
+        showQuiz();
     }
 
-    public void initQuiz() {
+    private void showQuiz() {
+
+        if(questions == null || questions.isEmpty() || quizFinished) {
+            buildNewQuiz();
+            currentQuestionIndex = 0;
+            quizFinished = false;
+        }
+
+        if(questions != null) {
+            view.displayQuestion(questions.get(currentQuestionIndex));
+        }
 
     }
 
-    public void buildNewQuiz() {
+    public void showNextQuestion() {
+        currentQuestionIndex++;
+        if(currentQuestionIndex >= questions.size()) {
+            //quizFinished = true; in neuer Methode setzen, wenn Activity verlassen wird
+        } else {
+            view.displayQuestion(questions.get(currentQuestionIndex));
+            answerSelected = false;
+        }
+    }
+
+    private void buildNewQuiz() {
         new BuildQuizCommand(this).execute();
+    }
+
+    public boolean canSelectAnswer() {
+        return !answerSelected;
+    }
+
+    public boolean processSelectedAnswer(long answerId) {
+
+        answerSelected = true;
+        boolean isCorrect = false;
+        Question currentQuestion = questions.get(currentQuestionIndex);
+        ArrayList<Answer> answers = currentQuestion.getAnswers();
+        for(Answer answer : answers) {
+            if(answer.getId() == answerId) {
+                if(answer.isCorrect()) {
+                    isCorrect = true;
+                } else {
+
+                }
+                break;
+            }
+        }
+        view.showNextQuestionButton();
+        return isCorrect;
     }
 
     @Override
@@ -35,7 +82,8 @@ public class QuizPresenter implements IQuizReceiver {
         else if(questions.isEmpty()) {
             view.displayError("Keine Daten vorhanden", "Es konnte keine Daten geladen werden!");
         } else {
-            view.displayQuestion(questions.get(0));
+            this.questions = questions;
+            showQuiz();
         }
     }
 }

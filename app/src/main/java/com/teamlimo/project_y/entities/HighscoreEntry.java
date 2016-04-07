@@ -31,7 +31,7 @@ public class HighscoreEntry implements IEntity {
         try {
             id = jobj.getLong("id");
             score = jobj.getLong("score");
-            playerName = jobj.getString("playerName");
+            playerName = jobj.getString("player_name");
 
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             date = format.parse(jobj.getString("date"));
@@ -50,7 +50,7 @@ public class HighscoreEntry implements IEntity {
 
         result.put("id", String.valueOf(id));
         result.put("score", String.valueOf(score));
-        result.put("playerName", String.valueOf(playerName));
+        result.put("player_name", String.valueOf(playerName));
         result.put("date", String.valueOf(date));
 
         return result;

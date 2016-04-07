@@ -14,7 +14,6 @@ public class QuizPresenter implements IQuizReceiver {
     private ArrayList<Question> questions;
     private int currentQuestionIndex;
     private boolean answerSelected;
-    private boolean quizFinished = false;
 
     public void setView(IQuizView view) {
         this.view = view;
@@ -23,10 +22,9 @@ public class QuizPresenter implements IQuizReceiver {
 
     private void showQuiz() {
 
-        if(questions == null || questions.isEmpty() || quizFinished) {
+        if(questions == null || questions.isEmpty()) {
             buildNewQuiz();
             currentQuestionIndex = 0;
-            quizFinished = false;
         }
 
         if(questions != null) {
@@ -91,6 +89,6 @@ public class QuizPresenter implements IQuizReceiver {
 
     public void reset() {
         answerSelected = false;
-        quizFinished = true;
+        questions = null;
     }
 }

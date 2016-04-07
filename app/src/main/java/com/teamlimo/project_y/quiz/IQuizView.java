@@ -9,4 +9,5 @@ public interface IQuizView {
     void displayQuestion(final Question question);
     void displayError(String title, String message);
     void showNextQuestionButton();
+    void showResultsButton();
 }

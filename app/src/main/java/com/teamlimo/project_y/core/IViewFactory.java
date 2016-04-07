@@ -7,5 +7,6 @@ public interface IViewFactory {
 
     Object createMenuView();
     Object createQuizView();
+    Object createQuizResultView();
     Object createHighscoreView();
 }

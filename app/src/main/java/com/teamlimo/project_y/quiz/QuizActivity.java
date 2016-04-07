@@ -51,10 +51,26 @@ public class QuizActivity extends Activity implements IQuizView {
         presenter.showNextQuestion();
     }
 
+    public void showResultsButton() {
+        setResultButtonVisibility(true);
+    }
+
+    public void gotoResults(View v) {
+        IViewManager vM = ViewManager.getInstance();
+        vM.switchView(this, vM.getViewFactory().createQuizResultView());
+        presenter.reset();
+    }
+
     private void setNextQuestionButtonVisibility(boolean visible) {
         Button nextQuestionButton = (Button) findViewById(R.id.nextQuestionButton);
         int visibility = (visible) ? View.VISIBLE : View.GONE;
         nextQuestionButton.setVisibility(visibility);
+    }
+
+    private void setResultButtonVisibility(boolean visible) {
+        Button resultButton = (Button) findViewById(R.id.gotoResultsButton);
+        int visibility = (visible) ? View.VISIBLE : View.GONE;
+        resultButton.setVisibility(visibility);
     }
 
     public void displayQuestion(final Question question) {

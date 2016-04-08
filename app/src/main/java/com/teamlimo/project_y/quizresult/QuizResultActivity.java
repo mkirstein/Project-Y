@@ -1,8 +1,9 @@
-package com.teamlimo.project_y.quizresult;
+package com.teamlimo.project_y.quizResult;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.widget.TextView;
 
 import com.teamlimo.project_y.R;
 import com.teamlimo.project_y.core.IViewManager;
@@ -12,7 +13,7 @@ import com.teamlimo.project_y.core.ViewManager;
 /**
  * Created by Marc on 07.04.2016.
  */
-public class QuizResultActivity extends Activity implements IQuizResultView {
+public class QuizResultActivity extends AppCompatActivity implements IQuizResultView {
 
     private QuizResultPresenter presenter;
 
@@ -20,6 +21,7 @@ public class QuizResultActivity extends Activity implements IQuizResultView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_result);
+        setTitle(R.string.quizResult_title);
         presenter = PresenterFactory.getInstance().getPresenter(QuizResultPresenter.class);
     }
 
@@ -38,5 +40,10 @@ public class QuizResultActivity extends Activity implements IQuizResultView {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void showResult(QuizResult quizResult) {
+        TextView scoreTextView = (TextView) findViewById(R.id.quizResultScore);
+        scoreTextView.setText(String.valueOf(quizResult.getFinalScore()));
     }
 }

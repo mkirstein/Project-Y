@@ -8,7 +8,7 @@ import com.teamlimo.project_y.core.IViewManager;
 import com.teamlimo.project_y.highscore.HighscoreActivity;
 import com.teamlimo.project_y.menu.MainMenuActivity;
 import com.teamlimo.project_y.quiz.QuizActivity;
-import com.teamlimo.project_y.quizresult.QuizResultActivity;
+import com.teamlimo.project_y.quizResult.QuizResultActivity;
 
 /**
  * Created by Project0rion on 27.03.2016.

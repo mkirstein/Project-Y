@@ -60,8 +60,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
     }
 
     public void onGoToQuizResultButtonClicked(View v) {
-        IViewManager vM = ViewManager.getInstance();
-        vM.switchView(this, vM.getViewFactory().createQuizResultView());
+        presenter.goToQuizResult();
         setResultButtonVisibility(false);
         presenter.reset();
     }

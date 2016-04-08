@@ -1,7 +1,12 @@
 package com.teamlimo.project_y.quiz;
 
+import com.teamlimo.project_y.core.IViewManager;
+import com.teamlimo.project_y.core.PresenterFactory;
+import com.teamlimo.project_y.core.ViewManager;
 import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
+import com.teamlimo.project_y.quizResult.QuizResult;
+import com.teamlimo.project_y.quizResult.QuizResultPresenter;
 
 import java.util.ArrayList;
 
@@ -45,9 +50,8 @@ public class QuizPresenter implements IQuizReceiver {
         if(questions == null || questions.isEmpty()) {
             new BuildQuizCommand(this).execute();
             currentQuestionIndex = 0;
-        }
-
-        if(questions != null) {
+            answerSelectable = true;
+        } else {
             view.displayQuestion(questions.get(currentQuestionIndex));
             startTimer();
         }
@@ -106,6 +110,20 @@ public class QuizPresenter implements IQuizReceiver {
         stopTimer();
         showButtons();
         return isCorrect;
+    }
+
+    public void goToQuizResult() {
+        // set Data of QuizResult
+        QuizResult quizResult = new QuizResult();
+        quizResult.setFinalScore(150);
+        quizResult.setCorrectAnswers(4);
+        quizResult.setIncorrectAnswers(1);
+
+        QuizResultPresenter quizResultPresenter = PresenterFactory.getInstance().getPresenter(QuizResultPresenter.class);
+        quizResultPresenter.init(quizResult);
+
+        IViewManager vM = ViewManager.getInstance();
+        vM.switchView(view, vM.getViewFactory().createQuizResultView());
     }
 
     @Override

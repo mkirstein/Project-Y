@@ -5,6 +5,7 @@
     <string name="play_quiz">Spielen</string>
 
     <string name="highscore_title">Highscores</string>
+    <string name="quizResult_title">Zusammenfassung</string>
 
     <string name="connection_failed_dialog_title">Verbindung fehlgeschlagen</string>
     <string name="connection_failed_dialog_message">Es konnte keine Verbindung zum Server hergestellt werden.</string>

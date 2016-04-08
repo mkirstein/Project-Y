@@ -73,7 +73,7 @@ public class QuizPresenter implements IQuizReceiver {
 
     public void showButtons() {
         if(isTimerFinished()) {
-            if (currentQuestionIndex + 1 >= questions.size()) {
+            if (questions != null && currentQuestionIndex + 1 >= questions.size()) {
                 view.showGoToQuizResultButton();
             } else {
                 view.showNextQuestionButton();

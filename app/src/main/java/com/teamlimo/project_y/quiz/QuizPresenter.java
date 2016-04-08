@@ -14,6 +14,8 @@ public class QuizPresenter implements IQuizReceiver {
     private ArrayList<Question> questions;
     private int currentQuestionIndex;
     private boolean answerSelected;
+    private boolean timerStarted = false;
+    private boolean timerFinished = false;
 
     public void setView(IQuizView view) {
         this.view = view;
@@ -39,13 +41,44 @@ public class QuizPresenter implements IQuizReceiver {
         if(currentQuestionIndex >= questions.size()) {
             view.showGoToQuizResultButton();
         } else {
-            view.displayQuestion(questions.get(currentQuestionIndex));
             answerSelected = false;
+            timerStarted = false;
+            timerFinished = false;
+            view.displayQuestion(questions.get(currentQuestionIndex));
         }
     }
 
     public boolean canSelectAnswer() {
         return !answerSelected;
+    }
+
+    public void setTimerStarted() {
+        timerStarted = true;
+    }
+
+    public boolean isTimerStarted() {
+        return timerStarted;
+    }
+
+    public void setTimerFinished() {
+        timerFinished = true;
+        answerSelected = true;
+        showButtons();
+    }
+
+    // ToDO Methode überflüssig?
+    public boolean isTimerFinished() {
+        return timerFinished;
+    }
+
+    public void showButtons() {
+        if(isTimerFinished()) {
+            if (currentQuestionIndex + 1 >= questions.size()) {
+                view.showGoToQuizResultButton();
+            } else {
+                view.showNextQuestionButton();
+            }
+        }
     }
 
     public boolean processSelectedAnswer(long answerId) {
@@ -62,11 +95,8 @@ public class QuizPresenter implements IQuizReceiver {
                 break;
             }
         }
-        if(currentQuestionIndex + 1 >= questions.size()) {
-            view.showGoToQuizResultButton();
-        } else {
-            view.showNextQuestionButton();
-        }
+        setTimerFinished();
+        showButtons();
         return isCorrect;
     }
 

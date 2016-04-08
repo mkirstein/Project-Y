@@ -2,10 +2,8 @@ package com.teamlimo.project_y.quiz;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.teamlimo.project_y.R;
 import com.teamlimo.project_y.core.IViewManager;
@@ -31,7 +28,6 @@ import java.util.Map;
 public class QuizActivity extends AppCompatActivity implements IQuizView {
 
     private QuizPresenter presenter;
-    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,44 +67,32 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
     }
 
     private void setNextQuestionButtonVisibility(boolean visible) {
-        Button nextQuestionButton = (Button) findViewById(R.id.nextQuestionButton);
-        int visibility = (visible) ? View.VISIBLE : View.GONE;
-        nextQuestionButton.setVisibility(visibility);
+        final Button nextQuestionButton = (Button) findViewById(R.id.nextQuestionButton);
+        final int visibility = (visible) ? View.VISIBLE : View.GONE;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                nextQuestionButton.setVisibility(visibility);
+            }
+        });
     }
 
     private void setResultButtonVisibility(boolean visible) {
-        Button resultButton = (Button) findViewById(R.id.gotoResultsButton);
-        int visibility = (visible) ? View.VISIBLE : View.GONE;
-        resultButton.setVisibility(visibility);
+        final Button resultButton = (Button) findViewById(R.id.gotoResultsButton);
+        final int visibility = (visible) ? View.VISIBLE : View.GONE;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                resultButton.setVisibility(visibility);
+            }
+        });
     }
 
-    private void startTimer() {
-        if(!presenter.isTimerStarted()) {
-            presenter.setTimerStarted();
-            final Context context = this;
-            final int timerLength = getResources().getInteger(R.integer.quiz_timer_length_millis);
-            int timerInterval = getResources().getInteger(R.integer.quiz_timer_interval_millis);
-            final ProgressBar leftBar = (ProgressBar) findViewById(R.id.quiz_progressbar_left);
-            final ProgressBar rightBar = (ProgressBar) findViewById(R.id.quiz_progressbar_right);
-            leftBar.setVisibility(View.VISIBLE);
-            rightBar.setVisibility(View.VISIBLE);
-            timer = new CountDownTimer(timerLength, timerInterval) {
-
-                public void onTick(long millisUntilFinished) {
-                    float progressLong = (float)millisUntilFinished / (float)timerLength;
-                    int progress = (int)(progressLong * 100);
-                    leftBar.setProgress(progress);
-                    rightBar.setProgress(progress);
-                }
-
-                public void onFinish() {
-                    presenter.setTimerFinished();
-                    leftBar.setVisibility(View.INVISIBLE);
-                    rightBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(context, "Zeit um!", Toast.LENGTH_SHORT).show();
-                }
-            }.start();
-        }
+    public void updateProgress(int progress) {
+        ProgressBar leftBar = (ProgressBar) findViewById(R.id.quiz_progressbar_left);
+        ProgressBar rightBar = (ProgressBar) findViewById(R.id.quiz_progressbar_right);
+        leftBar.setProgress(progress);
+        rightBar.setProgress(progress);
     }
 
     public void displayQuestion(final Question question) {
@@ -144,9 +128,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         if (!presenter.canSelectAnswer()) {
                             return;
                         }
-                        if (timer != null) {
-                            timer.cancel();
-                        }
+                        presenter.stopTimer();
                         TextView answerIDView = (TextView) view.findViewById(R.id.answerID);
                         long answerId = Long.parseLong((String) answerIDView.getText());
                         boolean isCorrectAnswer = presenter.processSelectedAnswer(answerId);
@@ -162,7 +144,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                     }
                 });
                 // Countdown
-                startTimer();
+                presenter.startTimer();
             }
         });
     }

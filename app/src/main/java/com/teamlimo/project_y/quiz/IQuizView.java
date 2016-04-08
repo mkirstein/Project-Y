@@ -13,4 +13,6 @@ public interface IQuizView {
 
     void showNextQuestionButton();
     void showGoToQuizResultButton();
+
+    void updateProgress(int progress);
 }

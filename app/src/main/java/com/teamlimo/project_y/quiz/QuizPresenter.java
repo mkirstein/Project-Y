@@ -11,11 +11,10 @@ import java.util.ArrayList;
 public class QuizPresenter implements IQuizReceiver {
 
     private IQuizView view;
+    private QuizCountDownTimer quizTimer;
     private ArrayList<Question> questions;
     private int currentQuestionIndex;
-    private boolean answerSelected;
-    private boolean timerStarted = false;
-    private boolean timerFinished = false;
+    private boolean answerSelectable;
 
     public void setView(IQuizView view) {
         this.view = view;
@@ -23,6 +22,25 @@ public class QuizPresenter implements IQuizReceiver {
     }
 
     private void showQuiz() {
+
+        if(quizTimer == null) {
+            final long timerLength = 15000;
+            final long timerInterval = 100;
+            quizTimer = new QuizCountDownTimer(timerLength, timerInterval) {
+
+                @Override
+                void onTimerUpdate(long delta) {
+                    int inverseProgress = (int)((1 - ((float)delta / (float)timerLength)) * 100);
+                    view.updateProgress(inverseProgress);
+                }
+
+                @Override
+                void onTimerFinished() {
+                    answerSelectable = false;
+                    showButtons();
+                }
+            };
+        }
 
         if(questions == null || questions.isEmpty()) {
             new BuildQuizCommand(this).execute();
@@ -37,42 +55,30 @@ public class QuizPresenter implements IQuizReceiver {
 
     public void showNextQuestion() {
         currentQuestionIndex++;
+        quizTimer.reset();
 
         if(currentQuestionIndex >= questions.size()) {
             view.showGoToQuizResultButton();
         } else {
-            answerSelected = false;
-            timerStarted = false;
-            timerFinished = false;
+            answerSelectable = true;
             view.displayQuestion(questions.get(currentQuestionIndex));
         }
     }
 
     public boolean canSelectAnswer() {
-        return !answerSelected;
+        return answerSelectable;
     }
 
-    public void setTimerStarted() {
-        timerStarted = true;
+    public void startTimer() {
+        quizTimer.start();
     }
 
-    public boolean isTimerStarted() {
-        return timerStarted;
-    }
-
-    public void setTimerFinished() {
-        timerFinished = true;
-        answerSelected = true;
-        showButtons();
-    }
-
-    // ToDO Methode überflüssig?
-    public boolean isTimerFinished() {
-        return timerFinished;
+    public void stopTimer() {
+        quizTimer.stop();
     }
 
     public void showButtons() {
-        if(isTimerFinished()) {
+        if(quizTimer.isTimerFinished()) {
             if (questions != null && currentQuestionIndex + 1 >= questions.size()) {
                 view.showGoToQuizResultButton();
             } else {
@@ -83,7 +89,7 @@ public class QuizPresenter implements IQuizReceiver {
 
     public boolean processSelectedAnswer(long answerId) {
 
-        answerSelected = true;
+        answerSelectable = false;
         boolean isCorrect = false;
         Question currentQuestion = questions.get(currentQuestionIndex);
         ArrayList<Answer> answers = currentQuestion.getAnswers();
@@ -95,7 +101,7 @@ public class QuizPresenter implements IQuizReceiver {
                 break;
             }
         }
-        setTimerFinished();
+        stopTimer();
         showButtons();
         return isCorrect;
     }
@@ -110,13 +116,15 @@ public class QuizPresenter implements IQuizReceiver {
             view.displayNoDataFoundError();
         } else {
             this.questions = questions;
+            quizTimer.reset();
             showQuiz();
         }
     }
 
     public void reset() {
-        answerSelected = false;
+        answerSelectable = true;
         questions = null;
         currentQuestionIndex = 0;
+        quizTimer.reset();
     }
 }

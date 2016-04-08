@@ -1,6 +1,16 @@
 <resources>
+
     <string name="app_name">Quiz</string>
-    <string name="chooseCategory">Wähle eine Kategorie!</string>
     <string name="view_highscore">Highscore</string>
     <string name="play_quiz">Spielen</string>
+
+    <string name="connection_failed_dialog_title">Verbindung fehlgeschlagen</string>
+    <string name="connection_failed_dialog_message">Es konnte keine Verbindung zum Server hergestellt werden.</string>
+
+    <string name="no_data_found_dialog_title">Keine Daten vorhanden</string>
+    <string name="no_data_found_dialog_message">Der Server hat keine Daten bereitgestellt.</string>
+
+    <string name="retry_dialog_button">Erneut versuchen</string>
+    <string name="return_dialog_button">Zurück</string>
+
 </resources>

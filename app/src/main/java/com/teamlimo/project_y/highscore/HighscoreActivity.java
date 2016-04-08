@@ -45,7 +45,7 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
                         HighscoreActivity.this,
                         transformedHighscoreEntries,
                         R.layout.highscorelist_item,
-                        new String[] { "score", "playerName"},
+                        new String[] { "score", "player_name"},
                         new int[] { R.id.score, R.id.playerName });
 
                 listView.setAdapter(adapter);

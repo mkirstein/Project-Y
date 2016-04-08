@@ -2,8 +2,10 @@ package com.teamlimo.project_y.quiz;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,8 +13,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teamlimo.project_y.R;
 import com.teamlimo.project_y.core.IViewManager;
@@ -27,12 +31,15 @@ import java.util.Map;
 public class QuizActivity extends AppCompatActivity implements IQuizView {
 
     private QuizPresenter presenter;
+    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
         setTitle("");
+        ProgressBar leftBar = (ProgressBar)(findViewById(R.id.quiz_progressbar_left));
+        leftBar.setRotation(180);
         presenter = PresenterFactory.getInstance().getPresenter(QuizPresenter.class);
     }
 
@@ -40,6 +47,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
     protected void onStart() {
         super.onStart();
         presenter.setView(this);
+        presenter.showButtons();
     }
 
     public void showNextQuestionButton() {
@@ -74,10 +82,38 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         resultButton.setVisibility(visibility);
     }
 
+    private void startTimer() {
+        if(!presenter.isTimerStarted()) {
+            presenter.setTimerStarted();
+            final Context context = this;
+            final int timerLength = getResources().getInteger(R.integer.quiz_timer_length_millis);
+            int timerInterval = getResources().getInteger(R.integer.quiz_timer_interval_millis);
+            final ProgressBar leftBar = (ProgressBar) findViewById(R.id.quiz_progressbar_left);
+            final ProgressBar rightBar = (ProgressBar) findViewById(R.id.quiz_progressbar_right);
+            leftBar.setVisibility(View.VISIBLE);
+            rightBar.setVisibility(View.VISIBLE);
+            timer = new CountDownTimer(timerLength, timerInterval) {
+
+                public void onTick(long millisUntilFinished) {
+                    float progressLong = (float)millisUntilFinished / (float)timerLength;
+                    int progress = (int)(progressLong * 100);
+                    leftBar.setProgress(progress);
+                    rightBar.setProgress(progress);
+                }
+
+                public void onFinish() {
+                    presenter.setTimerFinished();
+                    leftBar.setVisibility(View.INVISIBLE);
+                    rightBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(context, "Zeit um!", Toast.LENGTH_SHORT).show();
+                }
+            }.start();
+        }
+    }
+
     public void displayQuestion(final Question question) {
 
         final ListView listView = (ListView) findViewById(R.id.answerList);
-
 
         runOnUiThread(new Runnable() {
             public void run() {
@@ -108,7 +144,9 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         if (!presenter.canSelectAnswer()) {
                             return;
                         }
-
+                        if (timer != null) {
+                            timer.cancel();
+                        }
                         TextView answerIDView = (TextView) view.findViewById(R.id.answerID);
                         long answerId = Long.parseLong((String) answerIDView.getText());
                         boolean isCorrectAnswer = presenter.processSelectedAnswer(answerId);
@@ -123,6 +161,8 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
                     }
                 });
+                // Countdown
+                startTimer();
             }
         });
     }

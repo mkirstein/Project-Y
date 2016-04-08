@@ -16,4 +16,5 @@
 
     <color name="colorLightButtonBackground">#fefefe</color>
     <color name="colorLightButtonPressedBackground">#eeeeee</color>
+    <color name="colorGrayText">#808080</color>
 </resources>

@@ -13,4 +13,7 @@
     <string name="retry_dialog_button">Erneut versuchen</string>
     <string name="return_dialog_button">Zurück</string>
 
+    <string name="next_question_button">Nächste Frage</string>
+    <string name="goto_results_button">Zur Auswertung</string>
+
 </resources>

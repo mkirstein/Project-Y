@@ -6,13 +6,6 @@
     android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/category_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:textSize="30sp"
-            android:padding="10dp"/>
-        <TextView
             android:id="@+id/question_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +16,7 @@
         <ListView
             android:id="@+id/answerList"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:padding="10dp"/>
 
@@ -34,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="10dp"
-            android:text="Nächste Frage"
+            android:text="@string/next_question_button"
             android:onClick="onNextQuestionButtonClicked"/>
 
         <Button
@@ -44,6 +37,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="10dp"
-            android:text="Zur Auswertung"
+            android:text="@string/goto_results_button"
             android:onClick="onGoToQuizResultButtonClicked"/>
 </LinearLayout>

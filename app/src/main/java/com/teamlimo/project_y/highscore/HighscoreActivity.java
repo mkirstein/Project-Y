@@ -23,6 +23,7 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_highscore);
+        setTitle(R.string.highscore_title);
         presenter = PresenterFactory.getInstance().getPresenter(HighscorePresenter.class);
         presenter.setView(this);
     }

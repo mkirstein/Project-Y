@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,7 +24,7 @@ import com.teamlimo.project_y.entities.Question;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class QuizActivity extends Activity implements IQuizView {
+public class QuizActivity extends AppCompatActivity implements IQuizView {
 
     private QuizPresenter presenter;
 
@@ -31,6 +32,7 @@ public class QuizActivity extends Activity implements IQuizView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+        setTitle("");
         presenter = PresenterFactory.getInstance().getPresenter(QuizPresenter.class);
     }
 
@@ -80,11 +82,8 @@ public class QuizActivity extends Activity implements IQuizView {
         runOnUiThread(new Runnable() {
             public void run() {
 
-
-                TextView categoryView = (TextView) findViewById(R.id.category_name);
                 TextView questionView = (TextView) findViewById(R.id.question_name);
-
-                categoryView.setText(question.getCategory());
+                setTitle(question.getCategory());
                 questionView.setText(question.getQuestionText());
 
                 ArrayList<Answer> answers = question.getAnswers();

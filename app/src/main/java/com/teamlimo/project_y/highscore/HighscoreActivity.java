@@ -10,7 +10,11 @@ import com.teamlimo.project_y.R;
 import com.teamlimo.project_y.core.PresenterFactory;
 import com.teamlimo.project_y.entities.HighscoreEntry;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,15 +43,33 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
 
                 for (HighscoreEntry highscoreEntry : highscoreEntries) {
                     Map<String, String> highscoreEntryMap = highscoreEntry.saveToMap();
+
+                    // reformat date
+                    DateFormat df = new SimpleDateFormat("(dd.MM.yyyy)");
+                    highscoreEntryMap.put("date", df.format(highscoreEntry.getDate()));
+
                     transformedHighscoreEntries.add(highscoreEntryMap);
                 }
+
+                Collections.sort(transformedHighscoreEntries, new Comparator<Map<String, String>>() {
+                    @Override
+                    public int compare(Map<String, String> lhs, Map<String, String> rhs) {
+                        long firstScore = Long.parseLong(lhs.get("score"));
+                        long secondScore = Long.parseLong(rhs.get("score"));
+
+                        if (firstScore == secondScore)
+                            return 0;
+
+                        return firstScore < secondScore ? 1 : -1;
+                    }
+                });
 
                 ListAdapter adapter = new SimpleAdapter(
                         HighscoreActivity.this,
                         transformedHighscoreEntries,
                         R.layout.highscorelist_item,
-                        new String[] { "score", "player_name"},
-                        new int[] { R.id.score, R.id.playerName });
+                        new String[] { "date", "score", "player_name"},
+                        new int[] { R.id.highscoreEntry_date, R.id.highscoreEntry_score, R.id.highscoreEntry_playerName });
 
                 listView.setAdapter(adapter);
             }

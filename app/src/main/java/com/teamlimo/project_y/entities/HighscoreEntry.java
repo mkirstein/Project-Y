@@ -51,7 +51,9 @@ public class HighscoreEntry implements IEntity {
         result.put("id", String.valueOf(id));
         result.put("score", String.valueOf(score));
         result.put("player_name", String.valueOf(playerName));
-        result.put("date", String.valueOf(date));
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        result.put("date", df.format(date));
 
         return result;
     }

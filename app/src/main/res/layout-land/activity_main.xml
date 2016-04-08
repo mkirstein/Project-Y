@@ -24,7 +24,8 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:text="@string/play_quiz"
-            android:onClick="onButtonClicked"/>
+            android:onClick="onButtonClicked"
+            style="@style/LightButtonTheme"/>
 
         <Button
             android:id="@+id/viewHighscoreButton"
@@ -34,7 +35,8 @@
             android:text="@string/view_highscore"
             android:onClick="onButtonClicked"
             android:layout_below="@id/playQuizButton"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            style="@style/LightButtonTheme"/>
 
     </LinearLayout>
 </RelativeLayout>

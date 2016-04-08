@@ -1,5 +1,6 @@
 package com.teamlimo.project_y.quiz;
 
+import com.teamlimo.project_y.core.AppSettings;
 import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
 
@@ -24,8 +25,8 @@ public class QuizPresenter implements IQuizReceiver {
     private void showQuiz() {
 
         if(quizTimer == null) {
-            final long timerLength = 15000;
-            final long timerInterval = 100;
+            final long timerLength = AppSettings.QUIZTIMER_LENGTH;
+            final long timerInterval = AppSettings.QUIZTIMER_INTERVAL;
             quizTimer = new QuizCountDownTimer(timerLength, timerInterval) {
 
                 @Override

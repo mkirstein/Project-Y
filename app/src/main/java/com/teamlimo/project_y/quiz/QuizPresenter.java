@@ -49,6 +49,7 @@ public class QuizPresenter implements IQuizReceiver {
 
         if(questions != null) {
             view.displayQuestion(questions.get(currentQuestionIndex));
+            startTimer();
         }
 
     }
@@ -62,6 +63,7 @@ public class QuizPresenter implements IQuizReceiver {
         } else {
             answerSelectable = true;
             view.displayQuestion(questions.get(currentQuestionIndex));
+            startTimer();
         }
     }
 

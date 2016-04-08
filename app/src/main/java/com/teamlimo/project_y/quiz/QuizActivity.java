@@ -128,7 +128,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         if (!presenter.canSelectAnswer()) {
                             return;
                         }
-                        presenter.stopTimer();
+
                         TextView answerIDView = (TextView) view.findViewById(R.id.answerID);
                         long answerId = Long.parseLong((String) answerIDView.getText());
                         boolean isCorrectAnswer = presenter.processSelectedAnswer(answerId);
@@ -143,8 +143,6 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
                     }
                 });
-                // Countdown
-                presenter.startTimer();
             }
         });
     }

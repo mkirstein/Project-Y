@@ -39,8 +39,13 @@ public class QuizResultActivityView extends LinearLayout {
         float viewWidth = getWidth();
         float viewHeight = getHeight();
 
-        float circleRadius = 450;
-        float strokeWidth = 30;
+        float circleRadius = 300;
+        float strokeWidth = 25;
+
+        // using device dpi to adapt size to screen // reaches from 0.75 (low dpi) to 4 (high dpi)
+        float displayDensity = getResources().getDisplayMetrics().density;
+        circleRadius *= 1 + (displayDensity / 8f);
+        strokeWidth *= 1 + (displayDensity / 12f);
 
         PointF centerPoint = new PointF(viewWidth / 2, viewHeight / 2);
 

@@ -1,4 +1,4 @@
-package com.teamlimo.project_y.quizResult;
+package com.teamlimo.project_y.quizResulteee;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

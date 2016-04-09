@@ -1,4 +1,4 @@
-package com.teamlimo.project_y.quizResulteee;
+package com.teamlimo.project_y.quizResult;
 
 /**
  * Created by Marc on 07.04.2016.

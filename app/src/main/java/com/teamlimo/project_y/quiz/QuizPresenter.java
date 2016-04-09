@@ -6,8 +6,8 @@ import com.teamlimo.project_y.core.PresenterFactory;
 import com.teamlimo.project_y.core.ViewManager;
 import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
-import com.teamlimo.project_y.quizResulteee.QuizResult;
-import com.teamlimo.project_y.quizResulteee.QuizResultPresenter;
+import com.teamlimo.project_y.quizResult.QuizResult;
+import com.teamlimo.project_y.quizResult.QuizResultPresenter;
 
 import java.util.ArrayList;
 

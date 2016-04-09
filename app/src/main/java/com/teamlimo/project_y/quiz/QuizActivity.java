@@ -43,7 +43,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
     protected void onStart() {
         super.onStart();
         presenter.setView(this);
-        presenter.showButtons();
+        presenter.enableNextViewIfAllowed();
     }
 
     public void showNextQuestionButton() {

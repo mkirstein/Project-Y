@@ -18,6 +18,7 @@ public class QuizPresenter implements IQuizReceiver {
 
     private IQuizView view;
     private QuizCountDownTimer quizTimer;
+    private QuizScoreCalculator scoreCalculator;
     private ArrayList<Question> questions;
     private int currentQuestionIndex;
     private boolean answerSelectable;
@@ -43,7 +44,7 @@ public class QuizPresenter implements IQuizReceiver {
                 @Override
                 void onTimerFinished() {
                     answerSelectable = false;
-                    showButtons();
+                    enableNextViewIfAllowed();
                 }
             };
         }
@@ -80,11 +81,7 @@ public class QuizPresenter implements IQuizReceiver {
         quizTimer.start();
     }
 
-    public void stopTimer() {
-        quizTimer.stop();
-    }
-
-    public void showButtons() {
+    public void enableNextViewIfAllowed() {
         if(quizTimer.isTimerFinished()) {
             if (questions != null && currentQuestionIndex + 1 >= questions.size()) {
                 view.showGoToQuizResultButton();
@@ -97,28 +94,33 @@ public class QuizPresenter implements IQuizReceiver {
     public boolean processSelectedAnswer(long answerId) {
 
         answerSelectable = false;
-        boolean isCorrect = false;
+
         Question currentQuestion = questions.get(currentQuestionIndex);
-        ArrayList<Answer> answers = currentQuestion.getAnswers();
-        for(Answer answer : answers) {
-            if(answer.getId() == answerId) {
-                if(answer.isCorrect()) {
-                    isCorrect = true;
-                }
-                break;
+        Answer selectedAnswer = getAnswerWithId(answerId, currentQuestion);
+
+        quizTimer.stop();
+        scoreCalculator.processQuestionFinished(currentQuestion, selectedAnswer, quizTimer.getRelativeElapsedTime());
+        enableNextViewIfAllowed();
+
+        return selectedAnswer.isCorrect();
+    }
+
+    private Answer getAnswerWithId(long id, Question containingQuestion) {
+        for(Answer answer : containingQuestion.getAnswers()) {
+            if(answer.getId() == id) {
+                return answer;
             }
         }
-        stopTimer();
-        showButtons();
-        return isCorrect;
+
+        return null;
     }
 
     public void goToQuizResult() {
         // set Data of QuizResult
         QuizResult quizResult = new QuizResult();
-        quizResult.setFinalScore(150);
-        quizResult.setCorrectAnswers(4);
-        quizResult.setIncorrectAnswers(1);
+        quizResult.setFinalScore(scoreCalculator.getScore());
+        quizResult.setCorrectAnswers(scoreCalculator.getCorrectAnswers());
+        quizResult.setIncorrectAnswers(scoreCalculator.getIncorrectAnswers());
 
         QuizResultPresenter quizResultPresenter = PresenterFactory.getInstance().getPresenter(QuizResultPresenter.class);
         quizResultPresenter.init(quizResult);
@@ -137,6 +139,7 @@ public class QuizPresenter implements IQuizReceiver {
             view.displayNoDataFoundError();
         } else {
             this.questions = questions;
+            scoreCalculator = new QuizScoreCalculator();
             quizTimer.reset();
             showQuiz();
         }

@@ -16,8 +16,10 @@ public class QuizScoreCalculator {
     public void processQuestionFinished(Question question, Answer selectedAnswer, double relativeElapsedTime) {
         if (selectedAnswer.isCorrect())
             correctAnswers ++;
-        else
+        else {
             incorrectAnswers++;
+            return;
+        }
 
         // score
         if (relativeElapsedTime > 0.5)

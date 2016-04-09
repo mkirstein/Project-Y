@@ -39,7 +39,7 @@ public class QuizResultActivityView extends LinearLayout {
         float viewWidth = getWidth();
         float viewHeight = getHeight();
 
-        float circleRadius = 350;
+        float circleRadius = 450;
         float strokeWidth = 30;
 
         PointF centerPoint = new PointF(viewWidth / 2, viewHeight / 2);

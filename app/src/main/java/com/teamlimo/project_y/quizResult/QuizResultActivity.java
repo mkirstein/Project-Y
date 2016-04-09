@@ -1,5 +1,6 @@
 package com.teamlimo.project_y.quizResult;
 
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -16,11 +17,13 @@ import com.teamlimo.project_y.core.ViewManager;
 public class QuizResultActivity extends AppCompatActivity implements IQuizResultView {
 
     private QuizResultPresenter presenter;
+    private QuizResultActivityView quizResultView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz_result);
+        quizResultView = new QuizResultActivityView(this);
+        setContentView(quizResultView);
         setTitle(R.string.quizResult_title);
         presenter = PresenterFactory.getInstance().getPresenter(QuizResultPresenter.class);
     }
@@ -45,5 +48,9 @@ public class QuizResultActivity extends AppCompatActivity implements IQuizResult
     public void showResult(QuizResult quizResult) {
         TextView scoreTextView = (TextView) findViewById(R.id.quizResultScore);
         scoreTextView.setText(String.valueOf(quizResult.getFinalScore()));
+        int correctAnswers = quizResult.getCorrectAnswers();
+        int totalQuestions = quizResult.getIncorrectAnswers() + correctAnswers;
+
+        quizResultView.setResultsForArc(totalQuestions, correctAnswers);
     }
 }

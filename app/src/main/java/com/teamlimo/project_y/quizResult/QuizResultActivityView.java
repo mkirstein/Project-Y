@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
@@ -39,13 +40,8 @@ public class QuizResultActivityView extends LinearLayout {
         float viewWidth = getWidth();
         float viewHeight = getHeight();
 
-        float circleRadius = 300;
-        float strokeWidth = 25;
-
-        // using device dpi to adapt size to screen // reaches from 0.75 (low dpi) to 4 (high dpi)
-        float displayDensity = getResources().getDisplayMetrics().density;
-        circleRadius *= 1 + (displayDensity / 8f);
-        strokeWidth *= 1 + (displayDensity / 12f);
+        float circleRadius = dpToPx(150);
+        float strokeWidth = dpToPx(10);
 
         PointF centerPoint = new PointF(viewWidth / 2, viewHeight / 2);
 
@@ -75,5 +71,11 @@ public class QuizResultActivityView extends LinearLayout {
         this.correctAnswers = correctAnswers;
         // Redraw view
         invalidate();
+    }
+
+    private int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 }

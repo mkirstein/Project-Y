@@ -24,6 +24,7 @@ import com.teamlimo.project_y.entities.Question;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class QuizActivity extends AppCompatActivity implements IQuizView {
 
@@ -87,6 +88,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         });
     }
 
+    @Override
     public void updateProgress(int progress) {
         ProgressBar leftBar = (ProgressBar) findViewById(R.id.quiz_progressbar_left);
         ProgressBar rightBar = (ProgressBar) findViewById(R.id.quiz_progressbar_right);
@@ -94,6 +96,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         rightBar.setProgress(progress);
     }
 
+    @Override
     public void displayQuestion(final Question question) {
 
         final ListView listView = (ListView) findViewById(R.id.answerList);
@@ -145,37 +148,4 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
             }
         });
     }
-
-    public void displayConnectionFailedError() {
-        displayError(getString(R.string.connection_failed_dialog_title), getString(R.string.connection_failed_dialog_message));
-    }
-
-    public void displayNoDataFoundError() {
-        displayError(getString(R.string.no_data_found_dialog_title), getString(R.string.no_data_found_dialog_message));
-    }
-
-    private void displayError(String title, String message) {
-        final Activity sourceView = this;
-        AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(this);
-        errorDialogBuilder.setCancelable(false);
-        errorDialogBuilder.setTitle(title);
-        errorDialogBuilder.setMessage(message);
-        errorDialogBuilder.setPositiveButton(getString(R.string.retry_dialog_button), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                IViewManager vM = ViewManager.getInstance();
-                vM.switchView(sourceView, vM.getViewFactory().createQuizView());
-            }
-        });
-        errorDialogBuilder.setNeutralButton(getString(R.string.return_dialog_button), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                IViewManager vM = ViewManager.getInstance();
-                vM.switchView(sourceView, vM.getViewFactory().createMenuView());
-            }
-        });
-        errorDialogBuilder.create().show();
-    }
-
-
 }

@@ -8,9 +8,6 @@ import com.teamlimo.project_y.entities.Question;
 public interface IQuizView {
     void displayQuestion(final Question question);
 
-    void displayConnectionFailedError();
-    void displayNoDataFoundError();
-
     void showNextQuestionButton();
     void showGoToQuizResultButton();
 

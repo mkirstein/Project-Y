@@ -1,22 +1,34 @@
 <resources>
 
     <string name="app_name">Quiz Champ</string>
-    <string name="view_highscore">Highscore</string>
-    <string name="play_quiz">Spielen</string>
 
+    <!-- Activity Titles -->
     <string name="highscore_title">Highscores</string>
     <string name="quizResult_title">Zusammenfassung</string>
 
+    <!-- Main Menu Activity -->
+    <string name="view_highscore">Highscore</string>
+    <string name="play_quiz">Spielen</string>
+
+    <!-- Quiz Activity -->
+    <string name="next_question_button">Nächste Frage</string>
+    <string name="goto_results_button">Zur Auswertung</string>
+
+    <!-- Dialogs -->
     <string name="connection_failed_dialog_title">Verbindung fehlgeschlagen</string>
     <string name="connection_failed_dialog_message">Es konnte keine Verbindung zum Server hergestellt werden.</string>
 
     <string name="no_data_found_dialog_title">Keine Daten vorhanden</string>
     <string name="no_data_found_dialog_message">Der Server hat keine Daten bereitgestellt.</string>
 
+    <string name="remaining_quiz_dialog_title">Quiz fortsetzen?</string>
+    <string name="remaining_quiz_dialog_message">Soll das begonnene Quiz fortgesetzt werden?</string>
+    <string name="new_quiz_dialog_button">Neues Quiz</string>
+
+    <string name="error_dialog_title">Hoppla!</string>
+    <string name="error_dialog_message">Entschuldigung, ein Problem ist aufgetreten. Das hätte nicht passieren dürfen.</string>
+    <string name="proceed_dialog_button">Fortsetzen</string>
     <string name="retry_dialog_button">Erneut versuchen</string>
     <string name="return_dialog_button">Zurück</string>
-
-    <string name="next_question_button">Nächste Frage</string>
-    <string name="goto_results_button">Zur Auswertung</string>
 
 </resources>

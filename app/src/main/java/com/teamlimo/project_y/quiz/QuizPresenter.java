@@ -1,6 +1,7 @@
 package com.teamlimo.project_y.quiz;
 
 import com.teamlimo.project_y.core.AppSettings;
+import com.teamlimo.project_y.core.ErrorCodes;
 import com.teamlimo.project_y.core.IViewManager;
 import com.teamlimo.project_y.core.PresenterFactory;
 import com.teamlimo.project_y.core.ViewManager;
@@ -10,6 +11,7 @@ import com.teamlimo.project_y.quizResult.QuizResult;
 import com.teamlimo.project_y.quizResult.QuizResultPresenter;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Project0rion on 27.03.2016.
@@ -55,7 +57,7 @@ public class QuizPresenter implements IQuizReceiver {
             answerSelectable = true;
         } else {
             view.displayQuestion(questions.get(currentQuestionIndex));
-            startTimer();
+            quizTimer.start();
         }
 
     }
@@ -69,16 +71,12 @@ public class QuizPresenter implements IQuizReceiver {
         } else {
             answerSelectable = true;
             view.displayQuestion(questions.get(currentQuestionIndex));
-            startTimer();
+            quizTimer.start();
         }
     }
 
     public boolean canSelectAnswer() {
         return answerSelectable;
-    }
-
-    public void startTimer() {
-        quizTimer.start();
     }
 
     public void enableNextViewIfAllowed() {
@@ -131,12 +129,14 @@ public class QuizPresenter implements IQuizReceiver {
 
     @Override
     public void receiveQuiz(ArrayList<Question> questions) {
+        final IViewManager vM = ViewManager.getInstance();
+
         // Connection error handling
         if(questions == null) {
-            view.displayConnectionFailedError();
+            vM.showDialog(view, ErrorCodes.CONNECTION_FAILED, false, createRetryConnectingCallable(), createGoToMenuCallable());
         } // Database error, no results
         else if(questions.isEmpty()) {
-            view.displayNoDataFoundError();
+            vM.showDialog(view, ErrorCodes.NO_DATA_FOUND, false, createRetryConnectingCallable(), createGoToMenuCallable());
         } else {
             this.questions = questions;
             scoreCalculator = new QuizScoreCalculator();
@@ -145,10 +145,39 @@ public class QuizPresenter implements IQuizReceiver {
         }
     }
 
+    private Callable createRetryConnectingCallable() {
+        return new Callable() {
+            @Override
+            public Object call() throws Exception {
+                // retry connecting
+                final IViewManager vM = ViewManager.getInstance();
+                vM.switchView(view, vM.getViewFactory().createQuizView());
+                return null;
+            }
+        };
+    }
+
+    private Callable createGoToMenuCallable() {
+        return new Callable() {
+            @Override
+            public Object call() throws Exception {
+                // retry connecting
+                final IViewManager vM = ViewManager.getInstance();
+                vM.switchView(view, vM.getViewFactory().createMenuView());
+                return null;
+            }
+        };
+    }
+
+    public boolean hasActiveQuiz() {
+        return questions != null && !questions.isEmpty();
+    }
+
     public void reset() {
         answerSelectable = true;
         questions = null;
         currentQuestionIndex = 0;
-        quizTimer.reset();
+        quizTimer = null;
+        scoreCalculator = null;
     }
 }

@@ -45,6 +45,9 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         super.onStart();
         presenter.setView(this);
         presenter.enableNextViewIfAllowed();
+        if(!presenter.canSelectAnswer()) {
+            highlightAnswers();
+        }
     }
 
     public void showNextQuestionButton() {
@@ -171,6 +174,51 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         }
 
         return result;
+    }
+
+    private View getSelectedAnswerView(long answerId) {
+        AdapterView parentView = (ListView) findViewById(R.id.answerList);
+
+        for (int i = 0; i < parentView.getCount(); i++) {
+            Object item = parentView.getChildAt(i);
+
+            if (!(item instanceof View))
+                continue;
+
+            View itemAsView = (View) item;
+            TextView answerIDView = (TextView) itemAsView.findViewById(R.id.answerID);
+            long answerIdOfView = Long.parseLong((String) answerIDView.getText());
+
+            if (answerIdOfView == answerId)
+                return itemAsView;
+        }
+        return null;
+    }
+
+    private void highlightAnswers() {
+        long selectedAnswer = presenter.getSelectedAnswer();
+        Question currentQuestion = presenter.getCurrentQuestion();
+        boolean selectedAnswerIsCorrect = false;
+
+        if(selectedAnswer != -1) {
+            View view = getSelectedAnswerView(selectedAnswer);
+            selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswer);
+
+            if(view != null) {
+                if (selectedAnswerIsCorrect) {
+                    view.setBackgroundResource(R.color.colorCorrect);
+                } else {
+                    view.setBackgroundResource(R.color.colorIncorrect);
+                }
+            }
+        }
+
+        // Show correct answer
+        if(!selectedAnswerIsCorrect) {
+            for (View answerView : getCorrectAnswerViews(currentQuestion, (ListView)findViewById(R.id.answerList))) {
+                startPulseAnimation(answerView);
+            }
+        }
     }
 
     private void startPulseAnimation(final View view) {

@@ -89,7 +89,7 @@ public class QuizPresenter implements IQuizReceiver {
         }
     }
 
-    public boolean processSelectedAnswer(long answerId) {
+    public boolean onAnswerSelected(long answerId) {
 
         answerSelectable = false;
 
@@ -101,6 +101,11 @@ public class QuizPresenter implements IQuizReceiver {
         enableNextViewIfAllowed();
 
         return selectedAnswer.isCorrect();
+    }
+
+    public boolean isAnswerCorrect(Question contextQuestion, long answerId) {
+        Answer answer = getAnswerWithId(answerId, contextQuestion);
+        return answer.isCorrect();
     }
 
     private Answer getAnswerWithId(long id, Question containingQuestion) {

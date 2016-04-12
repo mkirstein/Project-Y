@@ -1,12 +1,14 @@
 package com.teamlimo.project_y.quiz;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -16,15 +18,13 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.teamlimo.project_y.R;
-import com.teamlimo.project_y.core.IViewManager;
 import com.teamlimo.project_y.core.PresenterFactory;
-import com.teamlimo.project_y.core.ViewManager;
 import com.teamlimo.project_y.entities.Answer;
 import com.teamlimo.project_y.entities.Question;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 public class QuizActivity extends AppCompatActivity implements IQuizView {
 
@@ -133,12 +133,16 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
 
                         TextView answerIDView = (TextView) view.findViewById(R.id.answerID);
                         long answerId = Long.parseLong((String) answerIDView.getText());
-                        boolean isCorrectAnswer = presenter.processSelectedAnswer(answerId);
+                        boolean isCorrectAnswer = presenter.onAnswerSelected(answerId);
 
                         if (isCorrectAnswer) {
                             view.setBackgroundResource(R.color.colorCorrect);
                         } else {
                             view.setBackgroundResource(R.color.colorIncorrect);
+
+                            for (View answerView : getCorrectAnswerViews(question, parent)) {
+                                startPulseAnimation(answerView);
+                            }
                         }
 
                         TextView answerTextView = (TextView) view.findViewById(R.id.answerText);
@@ -147,5 +151,43 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                 });
             }
         });
+    }
+
+    private List<View> getCorrectAnswerViews(Question contextQuestion, AdapterView parentView) {
+        List<View> result = new ArrayList<>();
+
+        for (int i = 0; i < parentView.getCount(); i++) {
+            Object item = parentView.getChildAt(i);
+
+            if (!(item instanceof View))
+                continue;
+
+            View itemAsView = (View) item;
+            TextView answerIDView = (TextView) itemAsView.findViewById(R.id.answerID);
+            long answerId = Long.parseLong((String) answerIDView.getText());
+
+            if (presenter.isAnswerCorrect(contextQuestion, answerId))
+                result.add(itemAsView);
+        }
+
+        return result;
+    }
+
+    private void startPulseAnimation(final View view) {
+        int colorFrom = getResources().getColor(R.color.colorCorrectTransparent);
+        int colorTo = getResources().getColor(R.color.colorCorrect);
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(500);
+        colorAnimation.setRepeatCount(Animation.INFINITE);
+        colorAnimation.setRepeatMode(Animation.REVERSE);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                view.setBackgroundColor((int) animator.getAnimatedValue());
+            }
+
+        });
+        colorAnimation.start();
     }
 }

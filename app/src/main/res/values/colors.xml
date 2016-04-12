@@ -13,6 +13,7 @@
     <color name="colorGrayText">#808080</color>
 
     <color name="colorCorrect">#009900</color>
+    <color name="colorCorrectTransparent">#00009900</color>
     <color name="colorIncorrect">#CC0000</color>
 
     <color name="colorLightButtonBackground">#fefefe</color>

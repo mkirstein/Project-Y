@@ -24,7 +24,7 @@ public class QuizPresenter implements IQuizReceiver {
     private ArrayList<Question> questions;
     private int currentQuestionIndex;
     private boolean answerSelectable;
-    private long selectedAnswer = -1;
+    private Answer selectedAnswer;
 
     public void setView(IQuizView view) {
         this.view = view;
@@ -66,7 +66,7 @@ public class QuizPresenter implements IQuizReceiver {
     public void showNextQuestion() {
         currentQuestionIndex++;
         quizTimer.reset();
-        selectedAnswer = -1;
+        selectedAnswer = null;
 
         if(currentQuestionIndex >= questions.size()) {
             view.showGoToQuizResultButton();
@@ -81,7 +81,7 @@ public class QuizPresenter implements IQuizReceiver {
         return answerSelectable;
     }
 
-    public long getSelectedAnswer() {
+    public Answer getSelectedAnswer() {
         return selectedAnswer;
     }
 
@@ -105,9 +105,9 @@ public class QuizPresenter implements IQuizReceiver {
     public boolean onAnswerSelected(long answerId) {
 
         answerSelectable = false;
-        selectedAnswer = answerId;
         Question currentQuestion = questions.get(currentQuestionIndex);
-        Answer selectedAnswer = getAnswerWithId(answerId, currentQuestion);
+        selectedAnswer = getAnswerWithId(answerId, currentQuestion);
+
 
         quizTimer.stop();
         scoreCalculator.processQuestionFinished(currentQuestion, selectedAnswer, quizTimer.getRelativeElapsedTime());
@@ -197,6 +197,6 @@ public class QuizPresenter implements IQuizReceiver {
         currentQuestionIndex = 0;
         quizTimer = null;
         scoreCalculator = null;
-        selectedAnswer = -1;
+        selectedAnswer = null;
     }
 }

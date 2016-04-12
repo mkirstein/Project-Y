@@ -2,8 +2,6 @@ package com.teamlimo.project_y.quiz;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -196,13 +194,14 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
     }
 
     private void highlightAnswers() {
-        long selectedAnswer = presenter.getSelectedAnswer();
+        Answer selectedAnswer = presenter.getSelectedAnswer();
         Question currentQuestion = presenter.getCurrentQuestion();
         boolean selectedAnswerIsCorrect = false;
 
-        if(selectedAnswer != -1) {
-            View view = getSelectedAnswerView(selectedAnswer);
-            selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswer);
+        if(selectedAnswer != null) {
+            long selectedAnswerID = selectedAnswer.getId();
+            View view = getSelectedAnswerView(selectedAnswerID);
+            selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
 
             if(view != null) {
                 if (selectedAnswerIsCorrect) {

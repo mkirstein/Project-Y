@@ -19,4 +19,8 @@
     <color name="colorLightButtonBackground">#fefefe</color>
     <color name="colorLightButtonPressedBackground">#eeeeee</color>
 
+    <color name="colorQuizProgressBarStart">#009900</color>
+    <color name="colorQuizProgressBarCenter">#ffcc00</color>
+    <color name="colorQuizProgressBarEnd">#cc0000</color>
+
 </resources>

@@ -90,11 +90,32 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
     }
 
     @Override
-    public void updateProgress(int progress) {
-        ProgressBar leftBar = (ProgressBar) findViewById(R.id.quiz_progressbar_left);
-        ProgressBar rightBar = (ProgressBar) findViewById(R.id.quiz_progressbar_right);
+    public void updateProgress(final int progress) {
+        final ProgressBar leftBar = (ProgressBar) findViewById(R.id.quiz_progressbar_left);
+        final ProgressBar rightBar = (ProgressBar) findViewById(R.id.quiz_progressbar_right);
         leftBar.setProgress(progress);
         rightBar.setProgress(progress);
+
+        // change color of progress bar if necessary
+        runOnUiThread(new Runnable() {
+            public void run() {
+                int startColor = getResources().getColor(R.color.colorQuizProgressBarStart);
+                int centerColor = getResources().getColor(R.color.colorQuizProgressBarCenter);
+                int endColor = getResources().getColor(R.color.colorQuizProgressBarEnd);
+
+                int currentColor;
+
+                if (progress < 25)
+                    currentColor = endColor;
+                else if (progress < 50)
+                    currentColor = centerColor;
+                else
+                    currentColor = startColor;
+
+                leftBar.getProgressDrawable().setColorFilter(currentColor, android.graphics.PorterDuff.Mode.SRC_IN);
+                rightBar.getProgressDrawable().setColorFilter(currentColor, android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        });
     }
 
     @Override

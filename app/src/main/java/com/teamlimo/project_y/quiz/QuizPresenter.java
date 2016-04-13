@@ -192,6 +192,7 @@ public class QuizPresenter implements IQuizReceiver {
     }
 
     public void reset() {
+        quizTimer.reset();
         answerSelectable = true;
         questions = null;
         currentQuestionIndex = 0;

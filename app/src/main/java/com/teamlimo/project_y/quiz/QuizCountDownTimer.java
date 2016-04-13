@@ -60,6 +60,9 @@ public abstract class QuizCountDownTimer {
     }
 
     public void reset() {
+        if(timer != null) {
+            timer.cancel();
+        }
         timerStarted = false;
         timerFinished = false;
     }

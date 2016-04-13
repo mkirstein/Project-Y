@@ -12,15 +12,6 @@
         android:textSize="25sp"/>
 
     <TextView
-        android:id="@+id/highscoreEntry_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_toRightOf="@+id/highscoreEntry_playerName"
-        android:textSize="16sp"
-        android:textColor="@color/colorGrayText"/>
-
-    <TextView
         android:id="@+id/highscoreEntry_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

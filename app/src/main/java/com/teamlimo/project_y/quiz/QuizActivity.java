@@ -43,9 +43,6 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         super.onStart();
         presenter.setView(this);
         presenter.enableNextViewIfAllowed();
-        if(!presenter.canSelectAnswer()) {
-            highlightAnswers();
-        }
     }
 
     public void showNextQuestionButton() {
@@ -171,6 +168,10 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
                     }
                 });
+
+                if(!presenter.canSelectAnswer()) {
+                    highlightAnswers();
+                }
             }
         });
     }
@@ -195,11 +196,11 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         return result;
     }
 
-    private View getSelectedAnswerView(long answerId) {
-        AdapterView parentView = (ListView) findViewById(R.id.answerList);
+    private View getSelectedAnswerView(long answerId, AdapterView<?> parentView) {
+
 
         for (int i = 0; i < parentView.getCount(); i++) {
-            Object item = parentView.getChildAt(i);
+            Object item = parentView.getAdapter().getView(i, null, null);
 
             if (!(item instanceof View))
                 continue;
@@ -219,23 +220,25 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         Question currentQuestion = presenter.getCurrentQuestion();
         boolean selectedAnswerIsCorrect = false;
 
+        AdapterView adapterView = (AdapterView) findViewById(R.id.answerList);
+
         if(selectedAnswer != null) {
             long selectedAnswerID = selectedAnswer.getId();
-            View view = getSelectedAnswerView(selectedAnswerID);
+            View selectedAnswerView = getSelectedAnswerView(selectedAnswerID, adapterView);
             selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
 
-            if(view != null) {
+            if(selectedAnswerView != null) {
                 if (selectedAnswerIsCorrect) {
-                    view.setBackgroundResource(R.color.colorCorrect);
+                    selectedAnswerView.setBackgroundResource(R.color.colorCorrect);
                 } else {
-                    view.setBackgroundResource(R.color.colorIncorrect);
+                    selectedAnswerView.setBackgroundResource(R.color.colorIncorrect);
                 }
             }
         }
 
         // Show correct answer
         if(!selectedAnswerIsCorrect) {
-            for (View answerView : getCorrectAnswerViews(currentQuestion, (ListView)findViewById(R.id.answerList))) {
+            for (View answerView : getCorrectAnswerViews(currentQuestion, adapterView)) {
                 startPulseAnimation(answerView);
             }
         }

@@ -25,6 +25,16 @@ public class HighscoreEntry implements IEntity {
     private String playerName;
     private Date date;
 
+    public HighscoreEntry() {
+
+    }
+
+    public HighscoreEntry(long score, String playerName, Date date) {
+        this.score = score;
+        this.playerName = playerName;
+        this.date = date;
+    }
+
     @Override
     public void createFromJSON(JSONObject jobj) {
 

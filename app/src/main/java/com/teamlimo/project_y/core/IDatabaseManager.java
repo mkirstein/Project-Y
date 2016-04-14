@@ -8,4 +8,5 @@ import java.util.ArrayList;
 public interface IDatabaseManager {
 
     <T extends IEntity> ArrayList<T> queryMany(Class<T> entityType, String operationName);
+    void insertOrUpdate(String operationName, IEntity entity);
 }

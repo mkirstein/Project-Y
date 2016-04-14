@@ -96,7 +96,6 @@ public class HttpDatabaseManager implements IDatabaseManager {
         InputStream requestResult = null;
 
         try {
-            // request method is GET
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpResponse httpResponse = httpClient.execute(httpRequest);
             HttpEntity httpEntity = httpResponse.getEntity();
@@ -132,6 +131,7 @@ public class HttpDatabaseManager implements IDatabaseManager {
             json = sb.toString();
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
+            return null;
         }
 
         // try parse the string to a JSON object
@@ -141,6 +141,7 @@ public class HttpDatabaseManager implements IDatabaseManager {
             jObj = new JSONObject(json);
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
+            return null;
         }
 
         // return JSON String

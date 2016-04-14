@@ -216,51 +216,63 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         return null;
     }
 
-    private void highlightAnswers() {
+    public void highlightAnswers() {
         Answer selectedAnswer = presenter.getSelectedAnswer();
         Question currentQuestion = presenter.getCurrentQuestion();
-        View selectedAnswerView;
-        boolean selectedAnswerIsCorrect;
+        View selectedAnswerView = null;
+        boolean selectedAnswerIsCorrect = false;
+        long selectedAnswerID = -1;
 
         AdapterView parentView = (AdapterView) findViewById(R.id.answerList);
 
-        long selectedAnswerID = selectedAnswer.getId();
-        selectedAnswerView = getSelectedAnswerView(selectedAnswerID, parentView);
-        selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
+        if(selectedAnswer != null) {
+            selectedAnswerID = selectedAnswer.getId();
+            selectedAnswerView = getSelectedAnswerView(selectedAnswerID, parentView);
+            selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
+        }
 
         highlightAnswers(currentQuestion, selectedAnswerView, selectedAnswerIsCorrect, parentView);
     }
 
     private void highlightAnswers(Question question, View selectedAnswerView, boolean isCorrect, AdapterView parentView) {
-        if (isCorrect) {
-            selectedAnswerView.setBackgroundResource(R.color.colorCorrect);
-        } else {
-            selectedAnswerView.setBackgroundResource(R.color.colorIncorrect);
 
+        if(selectedAnswerView != null) {
+            if (isCorrect) {
+                selectedAnswerView.setBackgroundResource(R.color.colorCorrect);
+            } else {
+                selectedAnswerView.setBackgroundResource(R.color.colorIncorrect);
+            }
+            TextView answerTextView = (TextView) selectedAnswerView.findViewById(R.id.answerText);
+            answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
+        }
+
+        if(!isCorrect) {
             for (View answerView : getCorrectAnswerViews(question, parentView)) {
                 startPulseAnimation(answerView);
             }
         }
-
-        TextView answerTextView = (TextView) selectedAnswerView.findViewById(R.id.answerText);
-        answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
     }
 
     private void startPulseAnimation(final View view) {
-        int colorFrom = getResources().getColor(R.color.colorCorrectTransparent);
-        int colorTo = getResources().getColor(R.color.colorCorrect);
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(500);
-        colorAnimation.setRepeatCount(Animation.INFINITE);
-        colorAnimation.setRepeatMode(Animation.REVERSE);
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
+        runOnUiThread(new Runnable() {
             @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                view.setBackgroundColor((int) animator.getAnimatedValue());
-            }
+            public void run() {
+                int colorFrom = getResources().getColor(R.color.colorCorrectTransparent);
+                int colorTo = getResources().getColor(R.color.colorCorrect);
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+                colorAnimation.setDuration(500);
+                colorAnimation.setRepeatCount(Animation.INFINITE);
+                colorAnimation.setRepeatMode(Animation.REVERSE);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        view.setBackgroundColor((int) animator.getAnimatedValue());
+                    }
+
+                });
+                colorAnimation.start();
+            }
         });
-        colorAnimation.start();
     }
 }

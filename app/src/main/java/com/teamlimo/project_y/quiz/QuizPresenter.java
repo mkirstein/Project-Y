@@ -99,6 +99,8 @@ public class QuizPresenter implements IQuizReceiver {
             } else {
                 view.showNextQuestionButton();
             }
+            view.highlightAnswers();
+
         }
     }
 

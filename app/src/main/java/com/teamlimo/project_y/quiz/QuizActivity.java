@@ -134,15 +134,31 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                     Map<String, String> answersMap = answer.saveToMap();
                     transformedAnswers.add(answersMap);
                 }
-
                 ListAdapter adapter = new SimpleAdapter(
-                        QuizActivity.this,
-                        transformedAnswers,
-                        R.layout.answerlist_item,
-                        new String[]{"text", "id"},
-                        new int[]{R.id.answerText, R.id.answerID});
+                            QuizActivity.this,
+                            transformedAnswers,
+                            R.layout.answerlist_item,
+                            new String[]{"text", "id"},
+                            new int[]{R.id.answerText, R.id.answerID});
 
                 listView.setAdapter(adapter);
+                /* When Activity is reloaded (orientation change) the selected and correct
+                 answers should be highlighted. The highlighting can only be done when the View is
+                 visible, hence the onLayoutChangeListener!
+                  */
+                listView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                    @Override
+                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                        if (!presenter.canSelectAnswer()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    highlightAnswers();
+                                }
+                            });
+                        }
+                    }
+                });
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -168,10 +184,6 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
                     }
                 });
-
-                if(!presenter.canSelectAnswer()) {
-                    highlightAnswers();
-                }
             }
         });
     }
@@ -196,11 +208,11 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         return result;
     }
 
-    private View getSelectedAnswerView(long answerId, AdapterView<?> parentView) {
+    private View getSelectedAnswerView(long answerId, AdapterView parentView) {
 
 
         for (int i = 0; i < parentView.getCount(); i++) {
-            Object item = parentView.getAdapter().getView(i, null, null);
+            Object item = parentView.getChildAt(i);
 
             if (!(item instanceof View))
                 continue;
@@ -220,11 +232,15 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         Question currentQuestion = presenter.getCurrentQuestion();
         boolean selectedAnswerIsCorrect = false;
 
-        AdapterView adapterView = (AdapterView) findViewById(R.id.answerList);
+        AdapterView parentView = (AdapterView) findViewById(R.id.answerList);
+
+
+
+        parentView.getAdapter().getView(0, null, null).setBackgroundResource(R.color.colorCorrect);
 
         if(selectedAnswer != null) {
             long selectedAnswerID = selectedAnswer.getId();
-            View selectedAnswerView = getSelectedAnswerView(selectedAnswerID, adapterView);
+            View selectedAnswerView = getSelectedAnswerView(selectedAnswerID, parentView);
             selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
 
             if(selectedAnswerView != null) {
@@ -238,7 +254,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
 
         // Show correct answer
         if(!selectedAnswerIsCorrect) {
-            for (View answerView : getCorrectAnswerViews(currentQuestion, adapterView)) {
+            for (View answerView : getCorrectAnswerViews(currentQuestion, parentView)) {
                 startPulseAnimation(answerView);
             }
         }

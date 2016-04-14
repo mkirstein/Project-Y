@@ -13,15 +13,9 @@ public class HighscorePresenter implements ITopHighscoresReceiver {
     private IHighscoreView view;
     private ArrayList<HighscoreEntry> highscoreEntries;
 
-    public HighscorePresenter() {
-        new GetTopHighscoresCommand(this).execute();
-    }
-
     public void setView(IHighscoreView view) {
         this.view = view;
-
-        if (highscoreEntries != null && !highscoreEntries.isEmpty())
-            view.displayHighscore(highscoreEntries);
+        new GetTopHighscoresCommand(this).execute();
     }
 
     @Override

@@ -72,7 +72,6 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
                         new int[] { R.id.highscoreEntry_score, R.id.highscoreEntry_playerName });
 
                 listView.setAdapter(adapter);
-                listView.setEnabled(false);
             }
         });
     }

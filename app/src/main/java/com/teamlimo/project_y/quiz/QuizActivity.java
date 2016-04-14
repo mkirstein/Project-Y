@@ -170,18 +170,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         long answerId = Long.parseLong((String) answerIDView.getText());
                         boolean isCorrectAnswer = presenter.onAnswerSelected(answerId);
 
-                        if (isCorrectAnswer) {
-                            view.setBackgroundResource(R.color.colorCorrect);
-                        } else {
-                            view.setBackgroundResource(R.color.colorIncorrect);
-
-                            for (View answerView : getCorrectAnswerViews(question, parent)) {
-                                startPulseAnimation(answerView);
-                            }
-                        }
-
-                        TextView answerTextView = (TextView) view.findViewById(R.id.answerText);
-                        answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
+                        highlightAnswers(question, view, isCorrectAnswer, parent);
                     }
                 });
             }
@@ -230,34 +219,31 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
     private void highlightAnswers() {
         Answer selectedAnswer = presenter.getSelectedAnswer();
         Question currentQuestion = presenter.getCurrentQuestion();
-        boolean selectedAnswerIsCorrect = false;
+        View selectedAnswerView;
+        boolean selectedAnswerIsCorrect;
 
         AdapterView parentView = (AdapterView) findViewById(R.id.answerList);
 
+        long selectedAnswerID = selectedAnswer.getId();
+        selectedAnswerView = getSelectedAnswerView(selectedAnswerID, parentView);
+        selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
 
+        highlightAnswers(currentQuestion, selectedAnswerView, selectedAnswerIsCorrect, parentView);
+    }
 
-        parentView.getAdapter().getView(0, null, null).setBackgroundResource(R.color.colorCorrect);
+    private void highlightAnswers(Question question, View selectedAnswerView, boolean isCorrect, AdapterView parentView) {
+        if (isCorrect) {
+            selectedAnswerView.setBackgroundResource(R.color.colorCorrect);
+        } else {
+            selectedAnswerView.setBackgroundResource(R.color.colorIncorrect);
 
-        if(selectedAnswer != null) {
-            long selectedAnswerID = selectedAnswer.getId();
-            View selectedAnswerView = getSelectedAnswerView(selectedAnswerID, parentView);
-            selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
-
-            if(selectedAnswerView != null) {
-                if (selectedAnswerIsCorrect) {
-                    selectedAnswerView.setBackgroundResource(R.color.colorCorrect);
-                } else {
-                    selectedAnswerView.setBackgroundResource(R.color.colorIncorrect);
-                }
-            }
-        }
-
-        // Show correct answer
-        if(!selectedAnswerIsCorrect) {
-            for (View answerView : getCorrectAnswerViews(currentQuestion, parentView)) {
+            for (View answerView : getCorrectAnswerViews(question, parentView)) {
                 startPulseAnimation(answerView);
             }
         }
+
+        TextView answerTextView = (TextView) selectedAnswerView.findViewById(R.id.answerText);
+        answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
     }
 
     private void startPulseAnimation(final View view) {

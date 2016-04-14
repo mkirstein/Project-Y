@@ -170,18 +170,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
                         long answerId = Long.parseLong((String) answerIDView.getText());
                         boolean isCorrectAnswer = presenter.onAnswerSelected(answerId);
 
-                        if (isCorrectAnswer) {
-                            view.setBackgroundResource(R.color.colorCorrect);
-                        } else {
-                            view.setBackgroundResource(R.color.colorIncorrect);
-
-                            for (View answerView : getCorrectAnswerViews(question, parent)) {
-                                startPulseAnimation(answerView);
-                            }
-                        }
-
-                        TextView answerTextView = (TextView) view.findViewById(R.id.answerText);
-                        answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
+                        highlightAnswers(question, view, isCorrectAnswer, parent);
                     }
                 });
             }
@@ -227,54 +216,63 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         return null;
     }
 
-    private void highlightAnswers() {
+    public void highlightAnswers() {
         Answer selectedAnswer = presenter.getSelectedAnswer();
         Question currentQuestion = presenter.getCurrentQuestion();
+        View selectedAnswerView = null;
         boolean selectedAnswerIsCorrect = false;
+        long selectedAnswerID = -1;
 
         AdapterView parentView = (AdapterView) findViewById(R.id.answerList);
 
-
-
-        parentView.getAdapter().getView(0, null, null).setBackgroundResource(R.color.colorCorrect);
-
         if(selectedAnswer != null) {
-            long selectedAnswerID = selectedAnswer.getId();
-            View selectedAnswerView = getSelectedAnswerView(selectedAnswerID, parentView);
+            selectedAnswerID = selectedAnswer.getId();
+            selectedAnswerView = getSelectedAnswerView(selectedAnswerID, parentView);
             selectedAnswerIsCorrect = presenter.isAnswerCorrect(currentQuestion, selectedAnswerID);
-
-            if(selectedAnswerView != null) {
-                if (selectedAnswerIsCorrect) {
-                    selectedAnswerView.setBackgroundResource(R.color.colorCorrect);
-                } else {
-                    selectedAnswerView.setBackgroundResource(R.color.colorIncorrect);
-                }
-            }
         }
 
-        // Show correct answer
-        if(!selectedAnswerIsCorrect) {
-            for (View answerView : getCorrectAnswerViews(currentQuestion, parentView)) {
+        highlightAnswers(currentQuestion, selectedAnswerView, selectedAnswerIsCorrect, parentView);
+    }
+
+    private void highlightAnswers(Question question, View selectedAnswerView, boolean isCorrect, AdapterView parentView) {
+
+        if(selectedAnswerView != null) {
+            if (isCorrect) {
+                selectedAnswerView.setBackgroundResource(R.color.colorCorrect);
+            } else {
+                selectedAnswerView.setBackgroundResource(R.color.colorIncorrect);
+            }
+            TextView answerTextView = (TextView) selectedAnswerView.findViewById(R.id.answerText);
+            answerTextView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorLightText));
+        }
+
+        if(!isCorrect) {
+            for (View answerView : getCorrectAnswerViews(question, parentView)) {
                 startPulseAnimation(answerView);
             }
         }
     }
 
     private void startPulseAnimation(final View view) {
-        int colorFrom = getResources().getColor(R.color.colorCorrectTransparent);
-        int colorTo = getResources().getColor(R.color.colorCorrect);
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(500);
-        colorAnimation.setRepeatCount(Animation.INFINITE);
-        colorAnimation.setRepeatMode(Animation.REVERSE);
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
+        runOnUiThread(new Runnable() {
             @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                view.setBackgroundColor((int) animator.getAnimatedValue());
-            }
+            public void run() {
+                int colorFrom = getResources().getColor(R.color.colorCorrectTransparent);
+                int colorTo = getResources().getColor(R.color.colorCorrect);
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+                colorAnimation.setDuration(500);
+                colorAnimation.setRepeatCount(Animation.INFINITE);
+                colorAnimation.setRepeatMode(Animation.REVERSE);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        view.setBackgroundColor((int) animator.getAnimatedValue());
+                    }
+
+                });
+                colorAnimation.start();
+            }
         });
-        colorAnimation.start();
     }
 }

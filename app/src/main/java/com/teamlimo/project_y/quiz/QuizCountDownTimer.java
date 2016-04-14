@@ -24,7 +24,6 @@ public abstract class QuizCountDownTimer {
             return;
         }
 
-        final QuizCountDownTimer quizTimer = this;
         TimerTask task = new TimerTask() {
             long startTime = System.currentTimeMillis();
             @Override

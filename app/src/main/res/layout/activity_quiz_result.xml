@@ -3,6 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:inputType="textPersonName"
+        android:hint="Name"
+        android:ems="10"
+        android:id="@+id/playerNameEditText"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,29 +34,13 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textPersonName"
-            android:hint="Name"
-            android:ems="10"
-            android:id="@+id/playerNameEditText"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/submitHighscoreButton"
-            android:text="@string/submit_highscore_button"
-            android:onClick="onSubmitHighscoreButtonClicked"/>
-
-    </LinearLayout>
+        android:layout_centerHorizontal="true"
+        android:id="@+id/submitHighscoreButton"
+        android:text="@string/submit_highscore_button"
+        android:onClick="onSubmitHighscoreButtonClicked"/>
 
 </RelativeLayout>

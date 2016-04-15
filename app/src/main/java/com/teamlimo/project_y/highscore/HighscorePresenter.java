@@ -26,4 +26,8 @@ public class HighscorePresenter implements ITopHighscoresReceiver {
         if (view != null)
             view.displayHighscore(highscoreEntries);
     }
+
+    public void HighlightHighscoreEntry(long score, String playerName) {
+
+    }
 }

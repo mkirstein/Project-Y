@@ -35,9 +35,40 @@ public class HttpDatabaseManager implements IDatabaseManager {
     private String baseAddress;
 
     private static final String TAG_ITEMS = "items";
+    private static final String TAG_VALUE = "value";
 
     public HttpDatabaseManager(String baseAddress) {
         this.baseAddress = baseAddress;
+    }
+
+    public <T> T queryPrimitive(Class<T> primitiveType, String operationName) {
+
+        String url = buildOperationUrl(operationName);
+        HttpGet httpGet = new HttpGet(url);
+        JSONObject requestResult = executeHttpRequest(httpGet);
+
+        if(requestResult == null)
+            return null;
+
+        try {
+            if (primitiveType == Integer.class)
+                return primitiveType.cast(requestResult.getInt(TAG_VALUE));
+            if (primitiveType == Long.class)
+                return primitiveType.cast(requestResult.getLong(TAG_VALUE));
+            if (primitiveType == String.class)
+                return primitiveType.cast(requestResult.getString(TAG_VALUE));
+            if (primitiveType == Boolean.class)
+                return primitiveType.cast(requestResult.getBoolean(TAG_VALUE));
+            if (primitiveType == Double.class)
+                return primitiveType.cast(requestResult.getDouble(TAG_VALUE));
+            else
+                throw new IllegalArgumentException("primitive type is not supported");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public <T extends IEntity> ArrayList<T> queryMany(Class<T> entityType, String operationName) {

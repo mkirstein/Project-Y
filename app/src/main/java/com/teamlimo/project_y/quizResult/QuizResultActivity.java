@@ -63,6 +63,19 @@ public class QuizResultActivity extends AppCompatActivity implements IQuizResult
         });
     }
 
+    public void showResult(QuizResult quizResult, String predictedUserName) {
+        TextView scoreTextView = (TextView) findViewById(R.id.quizResultScore);
+        scoreTextView.setText(String.valueOf(quizResult.getFinalScore()));
+
+        EditText playerNameEditText = (EditText) findViewById(R.id.playerNameEditText);
+        if (predictedUserName != null && predictedUserName.length() != 0)
+            playerNameEditText.setText(predictedUserName);
+
+        int correctAnswers = quizResult.getCorrectAnswers();
+        int totalQuestions = quizResult.getIncorrectAnswers() + correctAnswers;
+        quizResultView.setResultsForArc(totalQuestions, correctAnswers);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
@@ -79,14 +92,5 @@ public class QuizResultActivity extends AppCompatActivity implements IQuizResult
         String playerName = playerNameEditText.getText().toString().trim();
 
         presenter.submitHighscore(playerName);
-    }
-
-    public void showResult(QuizResult quizResult) {
-        TextView scoreTextView = (TextView) findViewById(R.id.quizResultScore);
-        scoreTextView.setText(String.valueOf(quizResult.getFinalScore()));
-        int correctAnswers = quizResult.getCorrectAnswers();
-        int totalQuestions = quizResult.getIncorrectAnswers() + correctAnswers;
-
-        quizResultView.setResultsForArc(totalQuestions, correctAnswers);
     }
 }

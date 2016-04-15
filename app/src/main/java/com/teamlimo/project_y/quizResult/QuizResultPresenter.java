@@ -1,9 +1,8 @@
 package com.teamlimo.project_y.quizResult;
 
-import com.teamlimo.project_y.core.DatabaseManager;
-import com.teamlimo.project_y.entities.HighscoreEntry;
-
-import java.util.Calendar;
+import com.teamlimo.project_y.core.UserData;
+import com.teamlimo.project_y.core.UserDataManager;
+import com.teamlimo.project_y.core.ViewManager;
 
 /**
  * Created by Marc on 07.04.2016.
@@ -26,7 +25,9 @@ public class QuizResultPresenter {
         if (quizResult == null)
             return;
 
-        view.showResult(quizResult);
+        String lastUsedUserName = UserDataManager.getInstance().load().getUserName();
+
+        view.showResult(quizResult, lastUsedUserName);
     }
 
     public void submitHighscore(String playerName) {
@@ -34,5 +35,11 @@ public class QuizResultPresenter {
             return;
 
         new SubmitHighscoreCommand(quizResult.getFinalScore(), playerName).execute();
+
+        UserData userData = UserDataManager.getInstance().load();
+        userData.setUserName(playerName);
+        UserDataManager.getInstance().save(userData);
+
+        ViewManager.getInstance().switchView(view, ViewManager.getInstance().getViewFactory().createHighscoreView());
     }
 }

@@ -1,8 +1,10 @@
 package com.teamlimo.project_y.menu;
 
+import com.teamlimo.project_y.androidCore.AndroidUserDataManager;
 import com.teamlimo.project_y.androidCore.AndroidViewManager;
 import com.teamlimo.project_y.core.ErrorCodes;
 import com.teamlimo.project_y.core.PresenterFactory;
+import com.teamlimo.project_y.core.UserDataManager;
 import com.teamlimo.project_y.core.ViewManager;
 import com.teamlimo.project_y.quiz.QuizPresenter;
 
@@ -18,6 +20,7 @@ public class MainMenuPresenter {
     public MainMenuPresenter(Object mainMenuView) {
         this.view = mainMenuView;
         ViewManager.init(new AndroidViewManager());
+        UserDataManager.init(new AndroidUserDataManager());
     }
 
     public void startQuiz() {

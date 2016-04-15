@@ -2,12 +2,15 @@ package com.teamlimo.project_y.highscore;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.teamlimo.project_y.R;
+import com.teamlimo.project_y.core.IViewManager;
 import com.teamlimo.project_y.core.PresenterFactory;
+import com.teamlimo.project_y.core.ViewManager;
 import com.teamlimo.project_y.entities.HighscoreEntry;
 
 import java.text.DateFormat;
@@ -68,11 +71,22 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
                         HighscoreActivity.this,
                         transformedHighscoreEntries,
                         R.layout.highscorelist_item,
-                        new String[] { "score", "player_name"},
-                        new int[] { R.id.highscoreEntry_score, R.id.highscoreEntry_playerName });
+                        new String[]{"score", "player_name"},
+                        new int[]{R.id.highscoreEntry_score, R.id.highscoreEntry_playerName});
 
                 listView.setAdapter(adapter);
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            IViewManager vM = ViewManager.getInstance();
+            vM.switchView(this, vM.getViewFactory().createMenuView());
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

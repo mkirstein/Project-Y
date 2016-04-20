@@ -115,6 +115,12 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
         });
     }
 
+    public void updateScore(long score) {
+        TextView scoreText = (TextView) findViewById(R.id.score);
+        String scoreString = Long.toString(score);
+        scoreText.setText(scoreString);
+    }
+
     @Override
     public void displayQuestion(final Question question) {
 

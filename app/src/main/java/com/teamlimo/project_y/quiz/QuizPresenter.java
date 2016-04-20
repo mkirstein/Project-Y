@@ -113,6 +113,7 @@ public class QuizPresenter implements IQuizReceiver {
 
         quizTimer.stop();
         scoreCalculator.processQuestionFinished(currentQuestion, selectedAnswer, quizTimer.getRelativeElapsedTime());
+        view.updateScore(scoreCalculator.getScore());
         enableNextViewIfAllowed();
 
         return selectedAnswer.isCorrect();
@@ -160,6 +161,7 @@ public class QuizPresenter implements IQuizReceiver {
         } else {
             this.questions = questions;
             scoreCalculator = new QuizScoreCalculator();
+            view.updateScore(scoreCalculator.getScore());
             quizTimer.reset();
             showQuiz();
         }
@@ -201,5 +203,6 @@ public class QuizPresenter implements IQuizReceiver {
         quizTimer = null;
         scoreCalculator = null;
         selectedAnswer = null;
+        view.updateScore(0);
     }
 }

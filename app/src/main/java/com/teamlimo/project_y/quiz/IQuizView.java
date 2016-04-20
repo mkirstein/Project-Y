@@ -12,6 +12,7 @@ public interface IQuizView {
     void showGoToQuizResultButton();
 
     void updateProgress(int progress);
+    void updateScore(long score);
 
     void highlightAnswers();
 }

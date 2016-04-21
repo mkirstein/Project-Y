@@ -8,5 +8,5 @@ public final class AppSettings {
     public static final long QUIZTIMER_LENGTH = 10000;
     public static final long QUIZTIMER_INTERVAL = 50;
 
-    public static final long MAX_SCORE_PER_QUESTION = 10;
+    public static final long MAX_SCORE_PER_QUESTION = 100;
 }

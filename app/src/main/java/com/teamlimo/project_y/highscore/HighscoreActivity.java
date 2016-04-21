@@ -3,9 +3,12 @@ package com.teamlimo.project_y.highscore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.teamlimo.project_y.R;
 import com.teamlimo.project_y.core.IViewManager;
@@ -36,7 +39,7 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
     }
 
     @Override
-    public void displayHighscore(final List<HighscoreEntry> highscoreEntries) {
+    public void displayHighscore(final List<HighscoreEntry> highscoreEntries, final int highlightedHighscoreIndex) {
         final ListView listView = (ListView) findViewById(R.id.highscoreList);
 
         runOnUiThread(new Runnable() {
@@ -75,8 +78,27 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
                         new int[]{R.id.highscoreEntry_score, R.id.highscoreEntry_playerName});
 
                 listView.setAdapter(adapter);
+
+                highlightHighscoreEntry(listView, highlightedHighscoreIndex);
+
+                listView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                    @Override
+                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                        highlightHighscoreEntry((AdapterView) v, highlightedHighscoreIndex);
+                    }
+                });
             }
         });
+    }
+
+    private void highlightHighscoreEntry(AdapterView parentView, int index) {
+        Object item = parentView.getChildAt(index);
+
+        if (!(item instanceof View))
+            return;
+
+        View itemAsView = (View) item;
+        itemAsView.setBackgroundResource(R.color.colorAccent);
     }
 
     @Override

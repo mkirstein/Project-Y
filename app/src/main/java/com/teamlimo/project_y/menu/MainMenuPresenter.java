@@ -6,6 +6,7 @@ import com.teamlimo.project_y.core.ErrorCodes;
 import com.teamlimo.project_y.core.PresenterFactory;
 import com.teamlimo.project_y.core.UserDataManager;
 import com.teamlimo.project_y.core.ViewManager;
+import com.teamlimo.project_y.highscore.HighscorePresenter;
 import com.teamlimo.project_y.quiz.QuizPresenter;
 
 import java.util.concurrent.Callable;
@@ -51,6 +52,9 @@ public class MainMenuPresenter {
     }
 
     public void viewHighscore() {
+        HighscorePresenter highscoreToPrepare = PresenterFactory.getInstance().getPresenter(HighscorePresenter.class);
+        highscoreToPrepare.resetHighlighting();
+
         ViewManager.getInstance().switchView(view, ViewManager.getInstance().getViewFactory().createHighscoreView());
     }
 }

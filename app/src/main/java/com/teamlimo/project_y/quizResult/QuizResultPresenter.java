@@ -1,8 +1,10 @@
 package com.teamlimo.project_y.quizResult;
 
+import com.teamlimo.project_y.core.PresenterFactory;
 import com.teamlimo.project_y.core.UserData;
 import com.teamlimo.project_y.core.UserDataManager;
 import com.teamlimo.project_y.core.ViewManager;
+import com.teamlimo.project_y.highscore.HighscorePresenter;
 
 /**
  * Created by Marc on 07.04.2016.
@@ -34,11 +36,14 @@ public class QuizResultPresenter {
         if (playerName.trim().length() == 0)
             return;
 
-        new SubmitHighscoreCommand(quizResult.getFinalScore(), playerName).execute();
+        HighscorePresenter highscoreToPrepare = PresenterFactory.getInstance().getPresenter(HighscorePresenter.class);
+        highscoreToPrepare.highlightLastHighscoreEntry(quizResult.getFinalScore(), playerName);
 
         UserData userData = UserDataManager.getInstance().load();
         userData.setUserName(playerName);
         UserDataManager.getInstance().save(userData);
+
+        new SubmitHighscoreCommand(quizResult.getFinalScore(), playerName).execute();
 
         ViewManager.getInstance().switchView(view, ViewManager.getInstance().getViewFactory().createHighscoreView());
     }

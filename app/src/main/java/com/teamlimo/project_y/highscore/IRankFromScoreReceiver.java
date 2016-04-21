@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Project0rion on 07.04.2016.
  */
-public interface IHighscoreView {
+public interface IRankFromScoreReceiver {
 
-    void displayHighscore(List<HighscoreEntry> highscoreEntries, int highlightedHighscoreIndex);
+    void receiveRankFromScore(int rank);
 }

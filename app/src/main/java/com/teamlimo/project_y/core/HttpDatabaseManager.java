@@ -42,10 +42,25 @@ public class HttpDatabaseManager implements IDatabaseManager {
     }
 
     public <T> T queryPrimitive(Class<T> primitiveType, String operationName) {
+        return queryPrimitive(primitiveType, operationName, null);
+    }
+
+    public <T> T queryPrimitive(Class<T> primitiveType, String operationName, IEntity input) {
 
         String url = buildOperationUrl(operationName);
-        HttpGet httpGet = new HttpGet(url);
-        JSONObject requestResult = executeHttpRequest(httpGet);
+        HttpPost httpPost = new HttpPost(url);
+
+        if (input != null) {
+            List<NameValuePair> entityPropertyValues = getEntityPropertyValues(input);
+
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(entityPropertyValues));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        JSONObject requestResult = executeHttpRequest(httpPost);
 
         if(requestResult == null)
             return null;
@@ -137,6 +152,8 @@ public class HttpDatabaseManager implements IDatabaseManager {
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

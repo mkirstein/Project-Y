@@ -66,7 +66,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
 
     private void setNextQuestionButtonVisibility(boolean visible) {
         final Button nextQuestionButton = (Button) findViewById(R.id.nextQuestionButton);
-        final int visibility = (visible) ? View.VISIBLE : View.GONE;
+        final int visibility = (visible) ? View.VISIBLE : View.INVISIBLE;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -77,7 +77,7 @@ public class QuizActivity extends AppCompatActivity implements IQuizView {
 
     private void setResultButtonVisibility(boolean visible) {
         final Button resultButton = (Button) findViewById(R.id.gotoResultsButton);
-        final int visibility = (visible) ? View.VISIBLE : View.GONE;
+        final int visibility = (visible) ? View.VISIBLE : View.INVISIBLE;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

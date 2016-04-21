@@ -205,7 +205,7 @@ public class QuizPresenter implements IQuizReceiver {
         questions = null;
         currentQuestionIndex = 0;
         quizTimer = null;
-        scoreCalculator = null;
+        scoreCalculator = new QuizScoreCalculator();
         selectedAnswer = null;
         view.updateScore(0);
     }

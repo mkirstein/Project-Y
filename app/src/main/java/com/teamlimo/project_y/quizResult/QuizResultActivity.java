@@ -93,4 +93,9 @@ public class QuizResultActivity extends AppCompatActivity implements IQuizResult
 
         presenter.submitHighscore(playerName);
     }
+
+    public void onMenuButtonClicked(View v) {
+        IViewManager vM = ViewManager.getInstance();
+        vM.switchView(this, vM.getViewFactory().createMenuView());
+    }
 }

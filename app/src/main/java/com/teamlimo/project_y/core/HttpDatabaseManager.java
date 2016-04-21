@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,7 +131,7 @@ public class HttpDatabaseManager implements IDatabaseManager {
         HttpPost httpPost = new HttpPost(url);
 
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(entityPropertyValues));
+            httpPost.setEntity(new UrlEncodedFormEntity(entityPropertyValues, HTTP.UTF_8));
             requestResult = executeHttpRequest(httpPost);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

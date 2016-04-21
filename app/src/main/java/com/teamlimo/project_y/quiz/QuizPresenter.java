@@ -26,6 +26,10 @@ public class QuizPresenter implements IQuizReceiver {
     private boolean answerSelectable;
     private Answer selectedAnswer;
 
+    public QuizPresenter() {
+        scoreCalculator = new QuizScoreCalculator();
+    }
+
     public void setView(IQuizView view) {
         this.view = view;
         showQuiz();
@@ -47,7 +51,7 @@ public class QuizPresenter implements IQuizReceiver {
                 @Override
                 void onTimerFinished() {
                     answerSelectable = false;
-                    enableNextViewIfAllowed();
+                    updateView();
                 }
             };
         }
@@ -92,7 +96,7 @@ public class QuizPresenter implements IQuizReceiver {
         return null;
     }
 
-    public void enableNextViewIfAllowed() {
+    public void updateView() {
         if(quizTimer.isTimerFinished()) {
             if (questions != null && currentQuestionIndex + 1 >= questions.size()) {
                 view.showGoToQuizResultButton();
@@ -100,8 +104,8 @@ public class QuizPresenter implements IQuizReceiver {
                 view.showNextQuestionButton();
             }
             view.highlightAnswers();
-
         }
+        view.updateScore(scoreCalculator.getScore());
     }
 
     public boolean onAnswerSelected(long answerId) {
@@ -113,8 +117,8 @@ public class QuizPresenter implements IQuizReceiver {
 
         quizTimer.stop();
         scoreCalculator.processQuestionFinished(currentQuestion, selectedAnswer, quizTimer.getRelativeElapsedTime());
-        view.updateScore(scoreCalculator.getScore());
-        enableNextViewIfAllowed();
+
+        updateView();
 
         return selectedAnswer.isCorrect();
     }
@@ -161,8 +165,8 @@ public class QuizPresenter implements IQuizReceiver {
         } else {
             this.questions = questions;
             scoreCalculator = new QuizScoreCalculator();
-            view.updateScore(scoreCalculator.getScore());
             quizTimer.reset();
+            updateView();
             showQuiz();
         }
     }

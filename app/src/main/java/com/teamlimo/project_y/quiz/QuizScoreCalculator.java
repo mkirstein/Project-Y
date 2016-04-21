@@ -22,10 +22,10 @@ public class QuizScoreCalculator {
         }
 
         // score
-        if (relativeElapsedTime > 0.5)
+        if (relativeElapsedTime > 0.75)
             score += AppSettings.MAX_SCORE_PER_QUESTION;
         else
-            score += AppSettings.MAX_SCORE_PER_QUESTION * (relativeElapsedTime * 2);
+            score += AppSettings.MAX_SCORE_PER_QUESTION * (relativeElapsedTime * 4/3);
     }
 
     public long getScore() {

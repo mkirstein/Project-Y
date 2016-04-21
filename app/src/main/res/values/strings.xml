@@ -15,7 +15,8 @@
     <string name="goto_results_button">Zur Auswertung</string>
 
     <!-- Quiz Result Activity -->
-    <string name="submit_highscore_button">Weiter</string>
+    <string name="goto_menu_button">Hauptmenü</string>
+    <string name="submit_highscore_button">Abschicken</string>
 
     <!-- Dialogs -->
     <string name="connection_failed_dialog_title">Verbindung fehlgeschlagen</string>

@@ -34,13 +34,27 @@
 
     </LinearLayout>
 
-    <Button
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/submitHighscoreButton"
-        android:text="@string/submit_highscore_button"
-        android:onClick="onSubmitHighscoreButtonClicked"/>
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="15dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gotoMenuButton"
+            android:text="@string/goto_menu_button"
+            android:onClick="onMenuButtonClicked"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/submitHighscoreButton"
+            android:text="@string/submit_highscore_button"
+            android:onClick="onSubmitHighscoreButtonClicked"/>
+    </LinearLayout>
 
 </RelativeLayout>

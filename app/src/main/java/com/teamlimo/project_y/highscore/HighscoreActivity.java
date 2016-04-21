@@ -111,4 +111,9 @@ public class HighscoreActivity extends AppCompatActivity implements IHighscoreVi
 
         return super.onKeyDown(keyCode, event);
     }
+
+    public void onMenuButtonClicked(View v) {
+        IViewManager vM = ViewManager.getInstance();
+        vM.switchView(this, vM.getViewFactory().createMenuView());
+    }
 }

@@ -14,4 +14,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/back_to_main_menu_button"
+        android:onClick="onMenuButtonClicked"/>
+
 </RelativeLayout>

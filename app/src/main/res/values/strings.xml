@@ -18,6 +18,9 @@
     <string name="goto_menu_button">Hauptmenü</string>
     <string name="submit_highscore_button">Abschicken</string>
 
+    <!-- Highscore Activity -->
+    <string name="back_to_main_menu_button">Zurück zum Menü</string>
+
     <!-- Dialogs -->
     <string name="connection_failed_dialog_title">Verbindung fehlgeschlagen</string>
     <string name="connection_failed_dialog_message">Es konnte keine Verbindung zum Server hergestellt werden.</string>
